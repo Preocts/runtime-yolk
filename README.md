@@ -12,21 +12,21 @@ loosely followed:
 
 ## Road Map
 
-- [] Configuration loading
-  - [] load a default.ini in project root, assume some defaults if missing
-    - [] project default environment
-    - [] project default environ var names
-      - [] environment
-      - [] logging level
-      - [] custom
-- [] Logger init
-  - [] Create a logger or apply lsogging style to existing (think AWS lambda)
-  - [] setters for format, handlers, etc
-  - [] defaults loaded from default.ini (optional if exists)
-- [] Secrets loader (.env)
-  - [] discovery and load
-  - [] optional auto-load flag in default.ini config
-  - [] cli `add-secret [name] [value]`
+- [ ] Configuration loading
+  - [ ] load a default.ini in project root, assume some defaults if missing
+    - [ ] project default environment
+    - [ ] project default environ var names
+      - [ ] environment
+      - [ ] logging level
+      - [ ] custom
+- [ ] Logger init
+  - [ ] Create a logger or apply lsogging style to existing (think AWS lambda)
+  - [ ] setters for format, handlers, etc
+  - [ ] defaults loaded from default.ini (optional if exists)
+- [ ] Secrets loader (.env)
+  - [ ] discovery and load
+  - [ ] optional auto-load flag in default.ini config
+  - [ ] cli `add-secret [name] [value]`
 
 ## Requirements
 
