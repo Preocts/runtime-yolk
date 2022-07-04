@@ -2,9 +2,9 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Preocts/python-module-template/main.svg)](https://results.pre-commit.ci/latest/github/Preocts/python-module-template/main)
-[![Python package](https://github.com/Preocts/python-module-template/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/Preocts/python-module-template/actions/workflows/python-tests.yml)
-[![codecov](https://codecov.io/gh/Preocts/python-module-template/branch/main/graph/badge.svg?token=sn79oOaqRI)](https://codecov.io/gh/Preocts/python-module-template)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Preocts/eggtime-init/main.svg)](https://results.pre-commit.ci/latest/github/Preocts/eggtime-init/main)
+[![Python package](https://github.com/Preocts/eggtime-init/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/Preocts/eggtime-init/actions/workflows/python-tests.yml)
+[![codecov](https://codecov.io/gh/Preocts/eggtime-init/branch/main/graph/badge.svg?token=sn79oOaqRI)](https://codecov.io/gh/Preocts/eggtime-init)
 
 This project aims to create a single library for run-time initiation tasks that
 are often duplicated across many projects. A work in progress, the road-map is
