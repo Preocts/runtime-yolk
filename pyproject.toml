@@ -3,10 +3,10 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "eggtime-init"
+name = "runtime-yolk"
 version = "0.0.1"
 requires-python = ">=3.8"
-description = "Module Description"
+description = "This project aims to create a single library for run-time initiation tasks that are often duplicated across many projects."
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
@@ -42,7 +42,7 @@ test = [
 ]
 
 [project.urls]
-homepage = "https://github.com/Preocts/eggtime-init"
+homepage = "https://github.com/Preocts/runtime-yolk"
 # documentation = ""
 # repository = ""
 # changelog = ""
@@ -73,7 +73,7 @@ disallow_untyped_defs = false
 [tool.coverage.run]
 branch = true
 source = [ "tests" ]
-source_pkgs = [ "eggtime_init" ]
+source_pkgs = [ "runtime_yolk" ]
 
 [tool.coverage.report]
 exclude_lines =[

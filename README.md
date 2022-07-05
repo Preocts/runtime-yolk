@@ -1,10 +1,10 @@
-# eggtime-init (WIP)
+# runtime-yolk (WIP)
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Preocts/eggtime-init/main.svg)](https://results.pre-commit.ci/latest/github/Preocts/eggtime-init/main)
-[![Python package](https://github.com/Preocts/eggtime-init/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/Preocts/eggtime-init/actions/workflows/python-tests.yml)
-[![codecov](https://codecov.io/gh/Preocts/eggtime-init/branch/main/graph/badge.svg?token=sn79oOaqRI)](https://codecov.io/gh/Preocts/eggtime-init)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Preocts/runtime-yolk/main.svg)](https://results.pre-commit.ci/latest/github/Preocts/runtime-yolk/main)
+[![Python package](https://github.com/Preocts/runtime-yolk/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/Preocts/runtime-yolk/actions/workflows/python-tests.yml)
+[![codecov](https://codecov.io/gh/Preocts/runtime-yolk/branch/main/graph/badge.svg?token=sn79oOaqRI)](https://codecov.io/gh/Preocts/runtime-yolk)
 
 This project aims to create a single library for run-time initiation tasks that
 are often duplicated across many projects. A work in progress, the road-map is
@@ -20,13 +20,14 @@ loosely followed:
       - [ ] logging level
       - [ ] custom
 - [ ] Logger init
-  - [ ] Create a logger or apply lsogging style to existing (think AWS lambda)
+  - [ ] Create a logger or apply logging style to existing (think AWS lambda)
   - [ ] setters for format, handlers, etc
   - [ ] defaults loaded from default.ini (optional if exists)
 - [ ] Secrets loader (.env)
   - [ ] discovery and load
   - [ ] optional auto-load flag in default.ini config
   - [ ] cli `add-secret [name] [value]`
+
 
 ## Requirements
 

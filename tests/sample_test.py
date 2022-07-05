@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import pytest
-from eggtime_init import sample
+from runtime_yolk import sample
 
 
 def test_main() -> None:
