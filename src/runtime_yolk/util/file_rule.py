@@ -8,18 +8,13 @@ def _replace_spaces(string: str) -> str:
     return re.sub(r"\s+", "_", string.strip())
 
 
-def get_file_name(filename: str, environment: str) -> str:
-    """Get the file name for the given filename and environment."""
+def get_file_name(filename: str, environment: str = "") -> str:
+    """Get the file name for the given filename, adding environment if provided."""
     # Replace spaces with underscores, removes extra spaces, and lowercase
     filename = _replace_spaces(filename.lower())
-    environment = _replace_spaces(environment.lower())
 
     if environment:
-        parts = filename.split(".")
-        if len(parts) > 1:
-            prefix = ".".join(parts[0 : len(parts) - 1])
-            filename = f"{prefix}_{environment}.{parts[-1]}"
-        else:
-            filename = f"{parts[0]}_{environment}"
+        environment = _replace_spaces(environment.lower())
+        filename = f"{filename}-{environment}"
 
-    return filename
+    return f"{filename}.ini"
