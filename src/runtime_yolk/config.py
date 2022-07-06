@@ -26,7 +26,12 @@ class Config:
 
     def __init__(self) -> None:
         """Create a new instance of Config."""
+        # Build and prime the default config. Values will be replaced by any
+        # loaded configurations.
         self._config = ConfigParser()
+        self._config["DEFAULT"] = DEFAULT_DEFAULT
+        self._config["ENVIRONMENT_VARIABLES"] = DEFAULT_ENVIROMENT_VARIABLES
+
         self._environment = self._fetch_environment()
         # Store loaded config file names to prevent loading the same file twice.
         self._loaded_configs: set[str] = set()
@@ -80,24 +85,16 @@ class Config:
         """Interal recursive loader."""
         _file = CWD / Path(get_file_name(config_file, yolk_environment))
 
-        # Early exit to avoid loading the same file multiple times
-        if str(_file) in self._loaded_configs:
-            return
-
-        if _file.is_file():
+        if _file.is_file() and str(_file) not in self._loaded_configs:
             self._config.read(_file)
-        else:
-            # Create a new config file in memory with the default values
-            self._config["DEFAULT"] = DEFAULT_DEFAULT
-            self._config["ENVIRONMENT_VARIABLES"] = DEFAULT_ENVIROMENT_VARIABLES
 
-        self._loaded_configs.add(str(_file))
-        self._update_environment_keys()
-        self._environment = self._fetch_environment()
+            self._loaded_configs.add(str(_file))
+            self._update_environment_keys()
+            self._environment = self._fetch_environment()
 
-        # If the config file has an environment set, load the environment file.
-        if load_additional and self._environment:
-            self._load(config_file, self._environment, load_additional)
+            # If the config file has an environment set, load the environment file.
+            if load_additional and self._environment:
+                self._load(config_file, self._environment, load_additional)
 
     # def save(self, config_file: str = "yolk_application.ini") -> None:
     #     """Save configuration data to a file."""
