@@ -22,7 +22,6 @@ class Config:
     """Load and store configuration data"""
 
     yolk_environment_key = "YOLK_ENVIRONMENT"
-    yolk_logging_level_key = "YOLK_LOGGING_LEVEL"
 
     def __init__(self) -> None:
         """Create a new instance of Config."""
@@ -62,18 +61,12 @@ class Config:
         config_env = self._config.get("DEFAULT", "environment", fallback="")
         return config_env or os.getenv(self.yolk_environment_key) or ""
 
-    def _update_environment_keys(self) -> None:
-        """Update the keys for environment variable values from loaded config."""
-        # TODO: Make this dynamic
+    def _update_environment_key(self) -> None:
+        """Update the key for environment variable values from loaded config."""
         self.yolk_environment_key = self._config.get(
             section="ENVIRONMENT_VARIABLES",
             option="yolk_environment",
             fallback=self.yolk_environment_key,
-        )
-        self.yolk_logging_level_key = self._config.get(
-            section="ENVIRONMENT_VARIABLES",
-            option="yolk_logging_level",
-            fallback=self.yolk_logging_level_key,
         )
 
     def _load(
@@ -89,7 +82,7 @@ class Config:
             self._config.read(_file)
 
             self._loaded_configs.add(str(_file))
-            self._update_environment_keys()
+            self._update_environment_key()
             self._environment = self._fetch_environment()
 
             # If the config file has an environment set, load the environment file.
