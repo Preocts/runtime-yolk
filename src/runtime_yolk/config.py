@@ -25,7 +25,7 @@ class Config:
 
     def __init__(self) -> None:
         """Create a new instance of Config."""
-        # Build and prime the default config. Values will be replaced by any
+        # Build and populate the default config. Values will be replaced by any
         # loaded configurations.
         self._config = ConfigParser()
         self._config["DEFAULT"] = DEFAULT_DEFAULT
@@ -42,13 +42,13 @@ class Config:
         load_additional: bool = True,
     ) -> None:
         """
-        Load configuration data from a file.
+        Load configuration data from a file, layers loads onto existing loaded data.
 
-        Looks for the `config_file` in the working directory. After loading
-        the config_file, if `load_additional`, the environment value is appended
+        Looks for the `${config_name}.ini` in the working directory. After loading
+        the config_name, if `load_additional`, the environment value is appended
         to the filename before the file extension. e.g. `yolk_application.ini` becomes
-        `yolk_application_${yolk_environment}.ini`. If found, this config
-        is loaded next and the process repeats.
+        `yolk_application_${yolk_environment}.ini`. If found, this config is
+        loaded next.
 
         Args:
             config_name: The name of the configuration file without the extension.
@@ -79,25 +79,21 @@ class Config:
         _file = CWD / Path(get_file_name(config_file, yolk_environment))
 
         if _file.is_file() and str(_file) not in self._loaded_configs:
+            # Load the discovered file as a configuration file
+            # ConfigParser handles invalid files
             self._config.read(_file)
 
-            self._loaded_configs.add(str(_file))
+            # Update the environ key value to match newly loaded config
             self._update_environment_key()
+
+            # Update internal attributes (must be done after _update_environment_key())
+            self._loaded_configs.add(str(_file))
             self._environment = self._fetch_environment()
 
-            # If the config file has an environment set, load the environment file.
+            # If the config file has an environment set, attempt to load the next file.
             if load_additional and self._environment:
                 self._load(config_file, self._environment, load_additional)
-
-    # def save(self, config_file: str = "yolk_application.ini") -> None:
-    #     """Save configuration data to a file."""
-    #     with open(config_file, "w") as _file:
-    #         self._config.write(_file)
 
     def get_config(self) -> ConfigParser:
         """Get the config object."""
         return self._config
-
-    # def set_config(self, config: ConfigParser) -> None:
-    #     """Set the config object."""
-    #     self._config = config
