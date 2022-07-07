@@ -13,10 +13,10 @@ loosely followed:
 ## Road Map
 
 - [ ] Configuration loading
-  - [ ] load a default.ini in project root, assume some defaults if missing
-    - [ ] project default environment
+  - [X] load a default.ini in project root, assume some defaults if missing
+    - [X] project default environment
     - [ ] project default environ var names
-      - [ ] environment
+      - [X] environment
       - [ ] logging level
       - [ ] custom
 - [ ] Logger init
