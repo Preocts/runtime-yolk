@@ -43,3 +43,13 @@ def test_load_default_and_env_config(config_prod: config.Config) -> None:
 
     assert loaded_config.get("DEFAULT", "logging_level") == "ERROR"
     assert loaded_config.get("DEFAULT", "environment") == "prod"
+
+
+def test_load_default_no_additional(config_prod: config.Config) -> None:
+    with patch.object(config, "CWD", "tests/fixtures/default_and_env_config"):
+        config_prod.load(load_additional=False)
+
+        loaded_config = config_prod.get_config()
+
+    assert loaded_config.get("DEFAULT", "logging_level") != "ERROR"
+    assert loaded_config.get("DEFAULT", "environment") != "prod"
