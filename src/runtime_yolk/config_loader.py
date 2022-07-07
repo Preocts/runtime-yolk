@@ -18,7 +18,7 @@ DEFAULT_ENVIROMENT_VARIABLES = {
 CWD = Path().cwd()
 
 
-class Config:
+class ConfigLoader:
     """Load and store configuration data"""
 
     yolk_environment_key = "YOLK_ENVIRONMENT"
