@@ -16,7 +16,7 @@ loosely followed:
 - [ ] Selectable load in parameters (bools?)
 - [ ] Loader methods for each
 - [ ] Configuration loading
-  - [X] load a default.ini in project root, assume some defaults if missing
+  - [X] load a application.ini in project root, assume some defaults if missing
     - [X] project default environment
     - [ ] project default environ var names
       - [X] environment

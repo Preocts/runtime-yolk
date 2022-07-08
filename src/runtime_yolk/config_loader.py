@@ -38,7 +38,7 @@ class ConfigLoader:
     def load(
         self,
         *,
-        config_name: str = "yolk_application",
+        config_name: str = "application",
         load_additional: bool = True,
     ) -> None:
         """
