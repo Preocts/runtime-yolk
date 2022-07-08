@@ -12,6 +12,9 @@ loosely followed:
 
 ## Road Map
 
+- [ ] Hot load parameter (run all loaders)
+- [ ] Selectable load in parameters (bools?)
+- [ ] Loader methods for each
 - [ ] Configuration loading
   - [X] load a default.ini in project root, assume some defaults if missing
     - [X] project default environment

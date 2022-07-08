@@ -3,8 +3,8 @@ Load local .env file into environment variables.
 
 Current format for the `.env` file supports strings only and is parsed in
 the following order:
-- Each seperate line is considered a new possible key/value set
-- Each set is delimted by the first `=` found
+- Each separate line is considered a new possible key/value set
+- Each set is delimited by the first `=` found
 - Leading and trailing whitespace are removed
 - Removes leading 'export ' prefix, case agnostic
 - Matched leading/trailing single quotes or double quotes will be
