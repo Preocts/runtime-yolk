@@ -38,12 +38,14 @@ ENV_FILE_EXPECTED = {
     "SHELL_COMPATIBLE": "well, that happened",
 }
 
+WD = Path("tests/fixtures")  # Working directory for tests
+
 
 @pytest.fixture
 def mock_env_file() -> Generator[str, None, None]:
     """Builds and returns filename of a mock .env file"""
     try:
-        file_desc, path = tempfile.mkstemp(dir=Path().cwd())
+        file_desc, path = tempfile.mkstemp(dir=WD)
         filename = Path(path).name
         with os.fdopen(file_desc, "w", encoding="utf-8") as temp_file:
             temp_file.write("\n".join(ENV_FILE_CONTENTS))
@@ -56,9 +58,8 @@ def mock_env_file() -> Generator[str, None, None]:
 def loader() -> Generator[env_loader.EnvLoader, None, None]:
     """Create us a fixture"""
     with patch.dict(os.environ, {}):
-        with patch.object(env_loader, "CWD", Path().cwd()):
-            loader = env_loader.EnvLoader()
-            yield loader
+        loader = env_loader.EnvLoader(working_directory=WD)
+        yield loader
 
 
 def test_load_env_file(mock_env_file: str, loader: env_loader.EnvLoader) -> None:
@@ -71,3 +72,42 @@ def test_load_env_file(mock_env_file: str, loader: env_loader.EnvLoader) -> None
 def test_load_missing_file(loader: env_loader.EnvLoader) -> None:
     """Confirm clean run if file is missing"""
     assert not loader.run(filename="BYWHATCHANGEWOULDTHISSEXIST")
+
+
+@pytest.mark.parametrize(
+    ("given", "expected"),
+    (
+        ("\"'test'\"", "'test'"),
+        ("'\"test\"'", "'\"test\"'"),
+        ("'test'\"", "'test'\""),
+        ("\"'test'", "\"'test'"),
+    ),
+)
+def test_remove_lt_dbl_quotes(
+    loader: env_loader.EnvLoader,
+    given: str,
+    expected: str,
+) -> None:
+    assert loader.remove_lt_dbl_quotes(given) == expected
+
+
+@pytest.mark.parametrize(
+    ("given", "expected"),
+    (
+        ("'\"test\"'", '"test"'),
+        ("\"'test'\"", "\"'test'\""),
+        ('"test"\'', '"test"\''),
+        ('\'"test"', '\'"test"'),
+    ),
+)
+def test_remove_lt_sgl_quotes(
+    loader: env_loader.EnvLoader,
+    given: str,
+    expected: str,
+) -> None:
+    assert loader.remove_lt_sgl_quotes(given) == expected
+
+
+def test_strip_export(loader: env_loader.EnvLoader) -> None:
+    assert loader.strip_export("EXPoRT \tTest") == "Test"
+    assert loader.strip_export("EXPoRT export") == "export"

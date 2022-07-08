@@ -16,15 +16,22 @@ import os
 import re
 from pathlib import Path
 
-CWD = Path().cwd()
-
 
 class EnvLoader:
     """Load local .env file into environment variables."""
 
     LT_DBL_QUOTES = r'^".*"$'
     LT_SGL_QUOTES = r"^'.*'$"
-    EXPORT_PREFIX = r"^\s*?export\s"
+    EXPORT_PREFIX = r"^\s*?export\s*"
+
+    def __init__(self, working_directory: Path | None = None) -> None:
+        """
+        Create .env loader.
+
+        Args:
+            working_directory: Set the working directory where file(s) will be loaded.
+        """
+        self._working_directory = working_directory or Path().cwd()
 
     def run(self, filename: str | None = None) -> bool:
         """
@@ -33,28 +40,29 @@ class EnvLoader:
         Args:
             filename: Name of environment file to load (default: ".env")
         """
-        filename = str(CWD / Path(filename)) if filename else str(CWD / Path(".env"))
+        filename = ".env" if not filename else filename
+        filepath = self._working_directory / filename
 
-        loaded_values = self._load_values(filename)
+        loaded_values = self._load_values(filepath)
 
         for key, value in loaded_values.items():
             os.environ[key] = value
 
         return bool(loaded_values)
 
-    def _load_values(self, filename: str) -> dict[str, str]:
+    def _load_values(self, filepath: Path) -> dict[str, str]:
         """Internal: Load values from provided filename."""
         try:
-            with open(filename, encoding="utf-8") as input_file:
-                return self._parse_env_file(input_file.read())
+            return self._parse_env_file(filepath.read_text())
+
         except FileNotFoundError:
             return {}
 
-    def _parse_env_file(self, input_file: str) -> dict[str, str]:
+    def _parse_env_file(self, contents: str) -> dict[str, str]:
         """Internal: Parse env file into key-pair values."""
         loaded_values: dict[str, str] = {}
 
-        for line in input_file.split("\n"):
+        for line in contents.split("\n"):
             if not line or line.strip().startswith("#") or len(line.split("=", 1)) != 2:
                 continue
             key, value = line.split("=", 1)
