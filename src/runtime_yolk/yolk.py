@@ -5,6 +5,7 @@ Reponsible for all loaders and runners.
 """
 from __future__ import annotations
 
+from configparser import ConfigParser
 from pathlib import Path
 
 from runtime_yolk.config_loader import ConfigLoader
@@ -27,3 +28,8 @@ class Yolk:
 
         self._config = ConfigLoader(working_directory=self._working_directory)
         self._env = EnvLoader(working_directory=self._working_directory)
+
+    @property
+    def config(self) -> ConfigParser:
+        """Return loaded ConfigParser object."""
+        return self._config.get_config()

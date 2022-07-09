@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from configparser import ConfigParser
 from pathlib import Path
 
 from runtime_yolk import ConfigLoader
@@ -31,3 +32,9 @@ def test_empty_envloader() -> None:
     yolk = Yolk()
 
     assert isinstance(yolk._env, EnvLoader)
+
+
+def test_config_property() -> None:
+    yolk = Yolk()
+
+    assert isinstance(yolk.config, ConfigParser)
