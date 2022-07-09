@@ -9,11 +9,8 @@ Setup:
 Expectations:
 
 - A default config is created in memory
-  - `logging_level` is default
-  - `environment` is default
-- Default environmental variable keys are used
-  - `YOLK_ENVIRONMENT` is used to label environment and load additional configs
-  - `YOLK_LOGGING_LEVEL` is used to set logging level
+  - `logging_level` is default (debug)
+  - `environment` is default (empty)
 
 `example.py`
 
@@ -31,7 +28,7 @@ Setup:
 - `application.ini` exists
 - `application_prod.ini` exits
 - `ENVIRONMENT=prod` set in environment vars
-- Change environment variable housing environment name to `ENVIRONMENT`
+- environment is interpolated to prod
 
 Expectations:
 
@@ -39,17 +36,14 @@ Expectations:
 - Yolk will load the prod `application_prod.ini` config
 - `logging_level` is "ERROR"
 - `environment` is "prod"
+- config is loaded on instantiation
 
 `application.ini`
 
 ```ini
 [DEFAULT]
 logging_level = DEBUG
-environment =
-
-[ENVIRONMENT_VARIABLES]
-yolk_environment = ENVIRONMENT
-yolk_logging_level = YOLK_LOGGING_LEVEL
+environment = {{ENVIRONMENT}}
 ```
 
 `application_prod.ini`

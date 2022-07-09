@@ -6,42 +6,35 @@ from typing import Generator
 from unittest.mock import patch
 
 import pytest
-from runtime_yolk import config_loader
+from runtime_yolk import ConfigLoader
 
 FIXTURE_PATH = Path("tests/fixtures/default_and_env_config")
 
 
 @pytest.fixture
-def config_instance() -> config_loader.ConfigLoader:
-    return config_loader.ConfigLoader()
+def config_instance() -> ConfigLoader:
+    return ConfigLoader()
 
 
 @pytest.fixture
-def config_prod() -> Generator[config_loader.ConfigLoader, None, None]:
+def config_prod() -> Generator[ConfigLoader, None, None]:
     with patch.dict(os.environ, {"ENVIRONMENT": "prod"}):
-        yield config_loader.ConfigLoader(working_directory=FIXTURE_PATH)
+        yield ConfigLoader(working_directory=FIXTURE_PATH)
 
 
 def test_load_with_no_default_config(
-    config_instance: config_loader.ConfigLoader,
+    config_instance: ConfigLoader,
 ) -> None:
-    config_instance = config_loader.ConfigLoader()
+    config_instance = ConfigLoader()
     config_instance.load()
 
     loaded_config = config_instance.get_config()
 
-    exp_level = config_loader.DEFAULT_DEFAULT["logging_level"]
-    exp_env = config_loader.DEFAULT_DEFAULT["environment"]
-    exp_level_key = config_loader.DEFAULT_ENVIROMENT_VARIABLES["logging_level"]
-    exp_env_key = config_loader.DEFAULT_ENVIROMENT_VARIABLES["environment"]
-
-    assert loaded_config.get("DEFAULT", "logging_level") == exp_level
-    assert loaded_config.get("DEFAULT", "environment") == exp_env
-    assert loaded_config.get("ENVIRONMENT_VARIABLES", "logging_level") == exp_level_key
-    assert loaded_config.get("ENVIRONMENT_VARIABLES", "environment") == exp_env_key
+    assert loaded_config.get("DEFAULT", "logging_level") == "DEBUG"
+    assert loaded_config.get("DEFAULT", "environment") == ""
 
 
-def test_load_default_and_env_config(config_prod: config_loader.ConfigLoader) -> None:
+def test_load_default_and_env_config(config_prod: ConfigLoader) -> None:
     config_prod.load()
 
     loaded_config = config_prod.get_config()
@@ -50,10 +43,30 @@ def test_load_default_and_env_config(config_prod: config_loader.ConfigLoader) ->
     assert loaded_config.get("DEFAULT", "environment") == "prod"
 
 
-def test_load_default_no_additional(config_prod: config_loader.ConfigLoader) -> None:
-    config_prod.load(load_additional=False)
+@pytest.mark.parametrize(
+    ("in_str", "out_str"),
+    (
+        ("{{ENVIRONMENT}}", "production"),
+        ("{{SECOND_VALUE}}", "eggs are cool"),
+        ("{{NOT FOUND}}", "{{NOT FOUND}}"),
+        (
+            "This{{ENVIRONMENT}}should replace because {{SECOND_VALUE}}",
+            "Thisproductionshould replace because eggs are cool",
+        ),
+        (
+            "This {{ENVIRONMENT}} should {{hi}} replace because --{{SECOND_VALUE}}--",
+            "This production should {{hi}} replace because --eggs are cool--",
+        ),
+    ),
+)
+def test_interpolate_environment(in_str: str, out_str: str) -> None:
+    config = ConfigLoader()
+    test_env = {
+        "ENVIRONMENT": "production",
+        "SECOND_VALUE": "eggs are cool",
+    }
 
-    loaded_config = config_prod.get_config()
+    with patch.dict(os.environ, test_env):
+        result = config._interpolate_environment(in_str)
 
-    assert loaded_config.get("DEFAULT", "logging_level") != "ERROR"
-    assert loaded_config.get("DEFAULT", "environment") != "prod"
+    assert result == out_str
