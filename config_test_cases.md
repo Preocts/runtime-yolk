@@ -21,6 +21,7 @@ Expectations:
 from runtime_yolk import Yolk
 
 runtime = Yolk()
+runtime.load_config()
 ```
 
 ## Load with default config and env config
@@ -64,5 +65,5 @@ environment = prod
 ```py
 from runtime_yolk import Yolk
 
-runtime = Yolk()
+runtime = Yolk(auto_load=True)
 ```

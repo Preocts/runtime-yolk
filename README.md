@@ -12,23 +12,21 @@ loosely followed:
 
 ## Road Map
 
-- [ ] Hot load parameter (run all loaders)
-- [ ] Selectable load in parameters (bools?)
-- [ ] Loader methods for each
+- [X] Hot load parameter (run all loaders)
 - [ ] Configuration loading
   - [X] load a application.ini in project root, assume some defaults if missing
     - [X] project default environment
-    - [ ] project default environ var names
+    - [X] project default environ var names
       - [X] environment
-      - [ ] logging level
-      - [ ] custom
+      - [X] logging level
+      - [X] custom
 - [ ] Logger init
   - [ ] Create a logger or apply logging style to existing (think AWS lambda)
   - [ ] setters for format, handlers, etc
   - [ ] defaults loaded from default.ini (optional if exists)
 - [ ] Secrets loader (.env)
-  - [ ] discovery and load
-  - [ ] optional auto-load flag in default.ini config
+  - [ ] auto load off by default
+  - [ ] discovery in cwd
   - [ ] cli `add-secret [name] [value]`
 
 
