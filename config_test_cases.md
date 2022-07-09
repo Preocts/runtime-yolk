@@ -4,7 +4,7 @@
 
 Setup:
 
-- No `yolk_application.ini` exists
+- No `application.ini` exists
 
 Expectations:
 
@@ -21,25 +21,26 @@ Expectations:
 from runtime_yolk import Yolk
 
 runtime = Yolk()
+runtime.load_config()
 ```
 
 ## Load with default config and env config
 
 Setup:
 
-- `yolk_application.ini` exists
-- `yolk_application_prod.ini` exits
+- `application.ini` exists
+- `application_prod.ini` exits
 - `ENVIRONMENT=prod` set in environment vars
 - Change environment variable housing environment name to `ENVIRONMENT`
 
 Expectations:
 
-- Yolk will load the default `yolk_application.ini` config
-- Yolk will load the prod `yolk_application_prod.ini` config
+- Yolk will load the default `application.ini` config
+- Yolk will load the prod `application_prod.ini` config
 - `logging_level` is "ERROR"
 - `environment` is "prod"
 
-`yolk_application.ini`
+`application.ini`
 
 ```ini
 [DEFAULT]
@@ -51,7 +52,7 @@ yolk_environment = ENVIRONMENT
 yolk_logging_level = YOLK_LOGGING_LEVEL
 ```
 
-`yolk_application_prod.ini`
+`application_prod.ini`
 
 ```ini
 [DEFAULT]
@@ -64,5 +65,5 @@ environment = prod
 ```py
 from runtime_yolk import Yolk
 
-runtime = Yolk()
+runtime = Yolk(auto_load=True)
 ```

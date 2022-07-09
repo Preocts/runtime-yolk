@@ -15,7 +15,6 @@ DEFAULT_ENVIROMENT_VARIABLES = {
     "environment": "YOLK_ENVIRONMENT",
     "logging_level": "YOLK_LOGGING_LEVEL",
 }
-CWD = Path().cwd()
 
 
 class ConfigLoader:
@@ -23,8 +22,15 @@ class ConfigLoader:
 
     yolk_environment_key = "YOLK_ENVIRONMENT"
 
-    def __init__(self) -> None:
-        """Create a new instance of Config."""
+    def __init__(self, *, working_directory: Path | None = None) -> None:
+        """
+        Create a new instance of Config.
+
+        Args:
+            working_directory: Set the working directory where file(s) will be loaded.
+        """
+        self._working_directory = working_directory or Path().cwd()
+
         # Build and populate the default config. Values will be replaced by any
         # loaded configurations.
         self._config = ConfigParser()
@@ -38,7 +44,7 @@ class ConfigLoader:
     def load(
         self,
         *,
-        config_name: str = "yolk_application",
+        config_name: str = "application",
         load_additional: bool = True,
     ) -> None:
         """
@@ -76,7 +82,8 @@ class ConfigLoader:
         load_additional: bool,
     ) -> None:
         """Interal recursive loader."""
-        _file = CWD / Path(get_file_name(config_file, yolk_environment))
+
+        _file = self._working_directory / get_file_name(config_file, yolk_environment)
 
         if _file.is_file() and str(_file) not in self._loaded_configs:
             # Load the discovered file as a configuration file
