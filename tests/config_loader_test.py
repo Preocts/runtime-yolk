@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import Generator
 from unittest.mock import patch
 
 import pytest
 from runtime_yolk import config_loader
+
+FIXTURE_PATH = Path("tests/fixtures/default_and_env_config")
 
 
 @pytest.fixture
@@ -16,12 +19,13 @@ def config_instance() -> config_loader.ConfigLoader:
 @pytest.fixture
 def config_prod() -> Generator[config_loader.ConfigLoader, None, None]:
     with patch.dict(os.environ, {"ENVIRONMENT": "prod"}):
-        yield config_loader.ConfigLoader()
+        yield config_loader.ConfigLoader(working_directory=FIXTURE_PATH)
 
 
 def test_load_with_no_default_config(
     config_instance: config_loader.ConfigLoader,
 ) -> None:
+    config_instance = config_loader.ConfigLoader()
     config_instance.load()
 
     loaded_config = config_instance.get_config()
@@ -38,20 +42,18 @@ def test_load_with_no_default_config(
 
 
 def test_load_default_and_env_config(config_prod: config_loader.ConfigLoader) -> None:
-    with patch.object(config_loader, "CWD", "tests/fixtures/default_and_env_config"):
-        config_prod.load()
+    config_prod.load()
 
-        loaded_config = config_prod.get_config()
+    loaded_config = config_prod.get_config()
 
     assert loaded_config.get("DEFAULT", "logging_level") == "ERROR"
     assert loaded_config.get("DEFAULT", "environment") == "prod"
 
 
 def test_load_default_no_additional(config_prod: config_loader.ConfigLoader) -> None:
-    with patch.object(config_loader, "CWD", "tests/fixtures/default_and_env_config"):
-        config_prod.load(load_additional=False)
+    config_prod.load(load_additional=False)
 
-        loaded_config = config_prod.get_config()
+    loaded_config = config_prod.get_config()
 
     assert loaded_config.get("DEFAULT", "logging_level") != "ERROR"
     assert loaded_config.get("DEFAULT", "environment") != "prod"
