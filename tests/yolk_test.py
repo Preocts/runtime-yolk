@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from runtime_yolk import Yolk
@@ -56,3 +57,25 @@ def test_config_layers_correctly() -> None:
     yolk.load_config("not-application")
 
     assert yolk.config.get("DEFAULT", "yolk_test") == "eggshell"
+
+
+def test_env_load() -> None:
+    yolk = Yolk(working_directory=FIXTURE_PATH)
+
+    yolk.load_env()
+
+    assert os.environ["ENVIRONMENT"] == "test"
+
+
+def test_env_load_specific_file() -> None:
+    yolk = Yolk(working_directory=FIXTURE_PATH)
+
+    yolk.load_env(".env-prod")
+
+    assert os.environ["ENVIRONMENT"] == "prod"
+
+
+def test_env_load_auto_load() -> None:
+    Yolk(working_directory=FIXTURE_PATH, auto_load=True)
+
+    assert os.environ["ENVIRONMENT"] == "test"
