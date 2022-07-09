@@ -64,14 +64,14 @@ def loader() -> Generator[env_loader.EnvLoader, None, None]:
 
 def test_load_env_file(mock_env_file: str, loader: env_loader.EnvLoader) -> None:
     """Load and confirm expected values"""
-    loader.run(filename=mock_env_file)
+    loader.load(filename=mock_env_file)
     for key, value in ENV_FILE_EXPECTED.items():
         assert os.getenv(key) == value, f"{key}, {value}"
 
 
 def test_load_missing_file(loader: env_loader.EnvLoader) -> None:
     """Confirm clean run if file is missing"""
-    assert not loader.run(filename="BYWHATCHANGEWOULDTHISSEXIST")
+    assert not loader.load(filename="BYWHATCHANGEWOULDTHISSEXIST")
 
 
 @pytest.mark.parametrize(
