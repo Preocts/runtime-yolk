@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from configparser import ConfigParser
 from pathlib import Path
 
-from runtime_yolk import ConfigLoader
-from runtime_yolk import EnvLoader
 from runtime_yolk import Yolk
+
+FIXTURE_PATH = "tests/fixtures/yolk_test"
 
 
 def test_working_directory_attr_unset() -> None:
@@ -22,19 +21,38 @@ def test_working_directory_attr_set() -> None:
     assert yolk._working_directory == expected
 
 
-def test_empty_configloader() -> None:
+def test_config_property_default() -> None:
     yolk = Yolk()
 
-    assert isinstance(yolk._config, ConfigLoader)
+    assert not yolk.config.get("DEFAULT", "environment")
 
 
-def test_empty_envloader() -> None:
-    yolk = Yolk()
+def test_config_load_default_ini() -> None:
+    yolk = Yolk(working_directory=FIXTURE_PATH)
 
-    assert isinstance(yolk._env, EnvLoader)
+    yolk.load_config()
+
+    assert yolk.config.get("DEFAULT", "yolk_test") == "pass"
 
 
-def test_config_property() -> None:
-    yolk = Yolk()
+def test_config_load_with_auto_load_true() -> None:
+    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=True)
 
-    assert isinstance(yolk.config, ConfigParser)
+    assert yolk.config.get("DEFAULT", "yolk_test") == "pass"
+
+
+def test_config_load_specific_ini() -> None:
+    yolk = Yolk(working_directory=FIXTURE_PATH)
+
+    yolk.load_config("not-application")
+
+    assert yolk.config.get("DEFAULT", "yolk_test") == "eggshell"
+
+
+def test_config_layers_correctly() -> None:
+    yolk = Yolk(working_directory=FIXTURE_PATH)
+
+    yolk.load_config()
+    yolk.load_config("not-application")
+
+    assert yolk.config.get("DEFAULT", "yolk_test") == "eggshell"

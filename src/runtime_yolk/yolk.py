@@ -18,9 +18,16 @@ class Yolk:
     def __init__(
         self,
         *,
+        auto_load: bool = False,
         working_directory: str | None = None,
     ) -> None:
-        """Super powerful docstring."""
+        """
+        Create Yolk run-time loader instance.
+
+        Keyword Args:
+            auto_load: Run loads on instantiation. (default: False)
+            working_directory: Defaults to cwd, provide path to where config files
+        """
         if working_directory:
             self._working_directory = Path(working_directory)
         else:
@@ -29,7 +36,19 @@ class Yolk:
         self._config = ConfigLoader(working_directory=self._working_directory)
         self._env = EnvLoader(working_directory=self._working_directory)
 
+        if auto_load:
+            self.load_config()
+
     @property
     def config(self) -> ConfigParser:
         """Return loaded ConfigParser object."""
         return self._config.get_config()
+
+    def load_config(self, config_name: str = "application") -> None:
+        """
+        Load configuration from a file, layers loads onto existing loaded data.
+
+        Args:
+            config_name: The name of the config file without the extension
+        """
+        self._config.load(config_name=config_name)
