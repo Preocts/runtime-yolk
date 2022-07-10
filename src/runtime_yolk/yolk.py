@@ -37,6 +37,7 @@ class Yolk:
         self._env = EnvLoader(working_directory=self._working_directory)
 
         if auto_load:
+            self.load_env()
             self.load_config()
 
     @property
@@ -52,3 +53,12 @@ class Yolk:
             config_name: The name of the config file without the extension
         """
         self._config.load(config_name=config_name)
+
+    def load_env(self, filename: str = ".env") -> None:
+        """
+        Load environment values from a file.
+
+        Args:
+            filename: The name of the env file to load. (default: `.env`)
+        """
+        self._env.load(filename)

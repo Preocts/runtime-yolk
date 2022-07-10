@@ -13,7 +13,7 @@ loosely followed:
 ## Road Map
 
 - [X] Hot load parameter (run all loaders)
-- [ ] Configuration loading
+- [X] Configuration loading
   - [X] load a application.ini in project root, assume some defaults if missing
     - [X] project default environment
     - [X] project default environ var names
@@ -25,8 +25,8 @@ loosely followed:
   - [ ] setters for format, handlers, etc
   - [ ] defaults loaded from default.ini (optional if exists)
 - [ ] Secrets loader (.env)
-  - [ ] auto load off by default
-  - [ ] discovery in cwd
+  - [X] auto load off by default
+  - [X] discovery in cwd
   - [ ] cli `add-secret [name] [value]`
 
 

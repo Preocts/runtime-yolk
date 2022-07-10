@@ -33,7 +33,7 @@ class EnvLoader:
         """
         self._working_directory = working_directory or Path().cwd()
 
-    def run(self, filename: str | None = None) -> bool:
+    def load(self, filename: str | None = None) -> bool:
         """
         Load file to environ.
 
