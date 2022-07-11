@@ -20,9 +20,8 @@ from pathlib import Path
 class EnvLoader:
     """Load local .env file into environment variables."""
 
-    LT_DBL_QUOTES = r'^".*"$'
-    LT_SGL_QUOTES = r"^'.*'$"
-    EXPORT_PREFIX = r"^\s*?export\s*"
+    LTQUOTES_RE = re.compile(r"([\"'])(.*)\1$|^(.*)$")
+    EXPORT_PREFIX_RE = re.compile(r"^\s*?export\s*", flags=re.IGNORECASE)
 
     def __init__(self, working_directory: Path | None = None) -> None:
         """
@@ -69,24 +68,17 @@ class EnvLoader:
 
             key = self.strip_export(key).strip()
             value = value.strip()
-
-            if value.startswith('"'):
-                value = self.remove_lt_dbl_quotes(value)
-            elif value.startswith("'"):
-                value = self.remove_lt_sgl_quotes(value)
+            value = self.remove_lt_quotes(value)
 
             loaded_values[key] = value
 
         return loaded_values
 
-    def remove_lt_dbl_quotes(self, in_: str) -> str:
-        """Remove matched leading and trailing double quotes."""
-        return in_.strip('"') if re.match(self.LT_DBL_QUOTES, in_) else in_
-
-    def remove_lt_sgl_quotes(self, in_: str) -> str:
-        """Remove matched leading and trailing double quotes."""
-        return in_.strip("'") if re.match(self.LT_SGL_QUOTES, in_) else in_
+    def remove_lt_quotes(self, in_: str) -> str:
+        """Remove matched leading and trailing single or double quotes."""
+        match = self.LTQUOTES_RE.match(in_)
+        return match.group(2) if match and match.group(2) else in_
 
     def strip_export(self, in_: str) -> str:
         """Remove leading 'export ' prefix, case agnostic."""
-        return re.sub(self.EXPORT_PREFIX, "", in_, flags=re.IGNORECASE)
+        return self.EXPORT_PREFIX_RE.sub("", in_)

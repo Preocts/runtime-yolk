@@ -78,36 +78,29 @@ def test_load_missing_file(loader: env_loader.EnvLoader) -> None:
     ("given", "expected"),
     (
         ("\"'test'\"", "'test'"),
-        ("'\"test\"'", "'\"test\"'"),
+        ("'\"test\"'", '"test"'),
         ("'test'\"", "'test'\""),
         ("\"'test'", "\"'test'"),
+        ("'\"test\"'", '"test"'),
+        ("\"'test'\"", "'test'"),
+        ('"test"\'', '"test"\''),
+        ('\'"test"', '\'"test"'),
     ),
 )
-def test_remove_lt_dbl_quotes(
+def test_remove_lt_quotes(
     loader: env_loader.EnvLoader,
     given: str,
     expected: str,
 ) -> None:
-    assert loader.remove_lt_dbl_quotes(given) == expected
+    assert loader.remove_lt_quotes(given) == expected
 
 
 @pytest.mark.parametrize(
     ("given", "expected"),
     (
-        ("'\"test\"'", '"test"'),
-        ("\"'test'\"", "\"'test'\""),
-        ('"test"\'', '"test"\''),
-        ('\'"test"', '\'"test"'),
+        ("EXPoRT \tTest", "Test"),
+        ("EXPoRT export", "export"),
     ),
 )
-def test_remove_lt_sgl_quotes(
-    loader: env_loader.EnvLoader,
-    given: str,
-    expected: str,
-) -> None:
-    assert loader.remove_lt_sgl_quotes(given) == expected
-
-
-def test_strip_export(loader: env_loader.EnvLoader) -> None:
-    assert loader.strip_export("EXPoRT \tTest") == "Test"
-    assert loader.strip_export("EXPoRT export") == "export"
+def test_strip_export(loader: env_loader.EnvLoader, given: str, expected: str) -> None:
+    assert loader.strip_export(given) == expected
