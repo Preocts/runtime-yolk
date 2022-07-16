@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import os
 import tempfile
+from configparser import NoOptionError
 from pathlib import Path
 from typing import Generator
 
@@ -47,15 +48,14 @@ def test_config_property_default() -> None:
 def test_config_load_default_ini() -> None:
     yolk = Yolk(working_directory=FIXTURE_PATH)
 
-    yolk.load_config()
-
     assert yolk.config.get("DEFAULT", "yolk_test") == "pass"
 
 
-def test_config_load_with_auto_load_true() -> None:
-    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=True)
+def test_config_load_with_auto_load_false() -> None:
+    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=False)
 
-    assert yolk.config.get("DEFAULT", "yolk_test") == "pass"
+    with pytest.raises(NoOptionError):
+        assert yolk.config.get("DEFAULT", "yolk_test") == "pass"
 
 
 def test_config_load_specific_ini() -> None:
@@ -67,7 +67,7 @@ def test_config_load_specific_ini() -> None:
 
 
 def test_config_layers_correctly() -> None:
-    yolk = Yolk(working_directory=FIXTURE_PATH)
+    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=False)
 
     yolk.load_config()
     yolk.load_config("not-application")
@@ -76,25 +76,17 @@ def test_config_layers_correctly() -> None:
 
 
 def test_env_load() -> None:
-    yolk = Yolk(working_directory=FIXTURE_PATH)
-
-    yolk.load_env()
+    Yolk(working_directory=FIXTURE_PATH)
 
     assert os.environ["ENVIRONMENT"] == "test"
 
 
 def test_env_load_specific_file() -> None:
-    yolk = Yolk(working_directory=FIXTURE_PATH)
+    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=False)
 
     yolk.load_env(".env-prod")
 
     assert os.environ["ENVIRONMENT"] == "prod"
-
-
-def test_env_load_auto_load() -> None:
-    Yolk(working_directory=FIXTURE_PATH, auto_load=True)
-
-    assert os.environ["ENVIRONMENT"] == "test"
 
 
 @pytest.mark.parametrize(
@@ -118,7 +110,7 @@ def test_add_logging_impacts_root_logger(
     caplog: LogCaptureFixture,
 ) -> None:
     yolk = Yolk()
-    yolk.add_logging(level)
+    yolk.set_logging(level)
     logger_name = f"test_{level}"
     log = logging.getLogger(logger_name)
     expected_range = list(range(expected_level, 60, 10))
@@ -152,7 +144,7 @@ def test_get_logger(name: str, expected: str) -> None:
 
 
 def test_add_logging_file(temp_file: str) -> None:
-    yolk = Yolk(auto_load=True)
+    yolk = Yolk()
     log = logging.getLogger("test_log")
 
     yolk.add_logging_file(temp_file, "CRITICAL")

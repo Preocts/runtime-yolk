@@ -19,14 +19,14 @@ class Yolk:
     def __init__(
         self,
         *,
-        auto_load: bool = False,
+        auto_load: bool = True,
         working_directory: str | None = None,
     ) -> None:
         """
         Create Yolk run-time loader instance.
 
         Keyword Args:
-            auto_load: Run loads on instantiation. (default: False)
+            auto_load: Run loads on instantiation. (default: True)
             working_directory: Defaults to cwd, provide path to where config files
         """
         if working_directory:
@@ -40,7 +40,7 @@ class Yolk:
         if auto_load:
             self.load_env()
             self.load_config()
-            self.add_logging()
+            self.set_logging()
 
     @property
     def config(self) -> ConfigParser:
@@ -65,7 +65,7 @@ class Yolk:
         """
         self._env.load(filename)
 
-    def add_logging(self, level: str | int | None = None) -> None:
+    def set_logging(self, level: str | int | None = None) -> None:
         """
         Set the root log level for stderr output. If empty, config level is used.
 
