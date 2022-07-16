@@ -15,12 +15,12 @@ FIXTURE_PATH = "tests/fixtures/yolk_test"
 
 
 @pytest.fixture
-def temp_file() -> Generator[str, None, None]:
+def temp_file() -> Generator[tuple[int, str], None, None]:
     """Creates a temp file."""
     try:
         file_desc, path = tempfile.mkstemp(prefix="temp_", dir="tests")
         os.close(file_desc)
-        yield path
+        yield file_desc, path
     finally:
         os.remove(path)
 
@@ -143,15 +143,18 @@ def test_get_logger(name: str, expected: str) -> None:
     assert logger.name == expected
 
 
-def test_add_logging_file(temp_file: str) -> None:
+def test_add_logging_file(temp_file: tuple[int, str]) -> None:
+    fd, filepath = temp_file
     yolk = Yolk()
     log = logging.getLogger("test_log")
 
-    yolk.add_logging_file(temp_file, "CRITICAL")
+    yolk.add_logging_file(filepath, "CRITICAL")
     log.critical("Testing file writing")
     log.debug("Should not be shown")
 
-    with open(temp_file) as test_in:
+    os.close(fd)
+
+    with open(filepath) as test_in:
         results = test_in.read()
 
     assert "Testing file writing" in results
