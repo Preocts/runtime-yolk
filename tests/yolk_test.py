@@ -122,3 +122,17 @@ def test_add_logging_impacts_root_logger(
 
     assert len(caplog.record_tuples) == len(expected_range)
     assert logging.getLogger().level == expected_level
+
+
+@pytest.mark.parametrize(
+    ("name", "expected"),
+    (
+        (__name__, __name__),
+        ("my_logger", "my_logger"),
+        (None, "root"),
+    ),
+)
+def test_get_logger(name: str, expected: str) -> None:
+    logger = Yolk().get_logger(name)
+
+    assert logger.name == expected

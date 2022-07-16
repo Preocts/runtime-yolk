@@ -69,9 +69,8 @@ class Yolk:
         Set the root log level for stderr output. If empty, config level is used.
 
         Args:
-            level: String or Int representing logging level. (e.g.: "DEBUG", 10)
+            level: String or Int representing logging level. (e.g.: "DEBUG" or 10)
         """
-        level = level.upper() if isinstance(level, str) else level
         config_level = self.config.get("DEFAULT", "logging_level", fallback="DEBUG")
         config_fmt = self.config.get("DEFAULT", "logging_format", fallback="")
 
@@ -83,3 +82,7 @@ class Yolk:
 
         # Apply desired level to root logger
         logging.getLogger().setLevel(level if level is not None else config_level)
+
+    def get_logger(self, name: str | None = None) -> logging.Logger:
+        """Return a logger. If a name is not provided, root logger is returned."""
+        return logging.getLogger(name)
