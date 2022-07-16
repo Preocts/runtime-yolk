@@ -2,13 +2,26 @@ from __future__ import annotations
 
 import logging
 import os
+import tempfile
 from pathlib import Path
+from typing import Generator
 
 import pytest
 from _pytest.logging import LogCaptureFixture
 from runtime_yolk import Yolk
 
 FIXTURE_PATH = "tests/fixtures/yolk_test"
+
+
+@pytest.fixture
+def temp_file() -> Generator[str, None, None]:
+    """Creates a temp file."""
+    try:
+        file_desc, path = tempfile.mkstemp(prefix="temp_", dir="tests")
+        os.close(file_desc)
+        yield path
+    finally:
+        os.remove(path)
 
 
 def test_working_directory_attr_unset() -> None:
@@ -136,3 +149,18 @@ def test_get_logger(name: str, expected: str) -> None:
     logger = Yolk().get_logger(name)
 
     assert logger.name == expected
+
+
+def test_add_logging_file(temp_file: str) -> None:
+    yolk = Yolk(auto_load=True)
+    log = logging.getLogger("test_log")
+
+    yolk.add_logging_file(temp_file, "CRITICAL")
+    log.critical("Testing file writing")
+    log.debug("Should not be shown")
+
+    with open(temp_file) as test_in:
+        results = test_in.read()
+
+    assert "Testing file writing" in results
+    assert "Should not be shown" not in results

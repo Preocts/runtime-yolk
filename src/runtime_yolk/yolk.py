@@ -40,6 +40,7 @@ class Yolk:
         if auto_load:
             self.load_env()
             self.load_config()
+            self.add_logging()
 
     @property
     def config(self) -> ConfigParser:
@@ -86,3 +87,27 @@ class Yolk:
     def get_logger(self, name: str | None = None) -> logging.Logger:
         """Return a logger. If a name is not provided, root logger is returned."""
         return logging.getLogger(name)
+
+    def add_logging_file(
+        self,
+        filepath: str,
+        level: str | int | None = None,
+        append: bool = True,
+    ) -> None:
+        """
+        Add a handler for logging output to desired file.
+
+        Args:
+            filepath: Path and filename to write logs. Relative or Absolute.
+            level: String or Int representing logging level. (e.g.: "DEBUG" or 10)
+            append: If False, existing log file will be cleared before writing
+        """
+        # Assert we have a level, default to lowest.
+        config_level = self.config.get("DEFAULT", "logging_level", fallback="DEBUG")
+        level = level if level is not None else config_level
+
+        handler = logging.FileHandler(filename=filepath, mode="a" if append else "w")
+        handler.set_name(f"yolk_core_{filepath}")
+        handler.setLevel(level)
+
+        logging.getLogger().addHandler(handler)
