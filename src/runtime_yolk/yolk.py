@@ -75,10 +75,11 @@ class Yolk:
         config_level = self.config.get("DEFAULT", "logging_level", fallback="DEBUG")
         config_fmt = self.config.get("DEFAULT", "logging_format", fallback="")
 
-        # Create our handler for logs, don't touch existing handlers
+        # Create our handler for root logger, don't touch existing handlers
         handler = logging.StreamHandler()
         handler.set_name("yolk_core")
         handler.setFormatter(logging.Formatter(config_fmt))
-        # handler.setLevel(level if level is not None else config_default)
-        logging.getLogger().setLevel(level if level is not None else config_level)
         logging.getLogger().addHandler(handler)
+
+        # Apply desired level to root logger
+        logging.getLogger().setLevel(level if level is not None else config_level)
