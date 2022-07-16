@@ -34,6 +34,7 @@ class ConfigLoader:
         self._config["DEFAULT"] = {
             "environment": "",
             "logging_level": "DEBUG",
+            "logging_format": "%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         }
 
     def load(

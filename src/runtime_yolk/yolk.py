@@ -5,6 +5,7 @@ Reponsible for all loaders and runners.
 """
 from __future__ import annotations
 
+import logging
 from configparser import ConfigParser
 from pathlib import Path
 
@@ -62,3 +63,23 @@ class Yolk:
             filename: The name of the env file to load. (default: `.env`)
         """
         self._env.load(filename)
+
+    def add_logging(self, level: str | int | None = None) -> None:
+        """
+        Set the root log level for stderr output. If empty, config level is used.
+
+        Args:
+            level: String or Int representing logging level. (e.g.: "DEBUG", 10)
+        """
+        level = level.upper() if isinstance(level, str) else level
+        config_level = self.config.get("DEFAULT", "logging_level", fallback="DEBUG")
+        config_fmt = self.config.get("DEFAULT", "logging_format", fallback="")
+
+        # Create our handler for root logger, don't touch existing handlers
+        handler = logging.StreamHandler()
+        handler.set_name("yolk_core")
+        handler.setFormatter(logging.Formatter(config_fmt))
+        logging.getLogger().addHandler(handler)
+
+        # Apply desired level to root logger
+        logging.getLogger().setLevel(level if level is not None else config_level)
