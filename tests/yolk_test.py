@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
 
+import pytest
+from _pytest.logging import LogCaptureFixture
 from runtime_yolk import Yolk
 
 FIXTURE_PATH = "tests/fixtures/yolk_test"
@@ -79,3 +82,43 @@ def test_env_load_auto_load() -> None:
     Yolk(working_directory=FIXTURE_PATH, auto_load=True)
 
     assert os.environ["ENVIRONMENT"] == "test"
+
+
+@pytest.mark.parametrize(
+    ("level", "expected_level"),
+    (
+        ("DEBUG", 10),
+        ("INFO", 20),
+        ("WARNING", 30),
+        ("ERROR", 40),
+        ("CRITICAL", 50),
+        (10, 10),
+        (20, 20),
+        (30, 30),
+        (40, 40),
+        (50, 50),
+    ),
+)
+def test_add_logging_impacts_root_logger(
+    level: str | int,
+    expected_level: int,
+    caplog: LogCaptureFixture,
+) -> None:
+    yolk = Yolk()
+    yolk.add_logging(level)
+    logger_name = f"test_{level}"
+    log = logging.getLogger(logger_name)
+    expected_range = list(range(expected_level, 60, 10))
+
+    log.debug("Test")
+    log.info("Test")
+    log.warning("Test")
+    log.error("Test")
+    log.critical("Test")
+
+    for name, logl, _ in caplog.record_tuples:
+        assert name == logger_name
+        assert logl in expected_range
+
+    assert len(caplog.record_tuples) == len(expected_range)
+    assert logging.getLogger().level == expected_level
