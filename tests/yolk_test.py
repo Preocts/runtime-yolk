@@ -16,7 +16,7 @@ FIXTURE_PATH = "tests/fixtures/yolk_test"
 
 @pytest.fixture
 def temp_file() -> Generator[tuple[int, str], None, None]:
-    """Creates a temp file."""
+    """Yields file_descriptor and path"""
     try:
         file_desc, path = tempfile.mkstemp(prefix="temp_", dir="tests")
         os.close(file_desc)
@@ -152,7 +152,7 @@ def test_add_logging_file(temp_file: tuple[int, str]) -> None:
     log.critical("Testing file writing")
     log.debug("Should not be shown")
 
-    os.close(fd)
+    os.close(fd)  # Used to force close file for Windows OS, avoid access error
 
     with open(filepath) as test_in:
         results = test_in.read()
