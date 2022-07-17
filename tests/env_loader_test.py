@@ -92,7 +92,7 @@ def test_remove_lt_quotes(
     given: str,
     expected: str,
 ) -> None:
-    assert loader.remove_lt_quotes(given) == expected
+    assert loader._remove_lt_quotes(given) == expected
 
 
 @pytest.mark.parametrize(
@@ -103,4 +103,4 @@ def test_remove_lt_quotes(
     ),
 )
 def test_strip_export(loader: env_loader.EnvLoader, given: str, expected: str) -> None:
-    assert loader.strip_export(given) == expected
+    assert loader._strip_export(given) == expected

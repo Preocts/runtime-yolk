@@ -66,19 +66,19 @@ class EnvLoader:
                 continue
             key, value = line.split("=", 1)
 
-            key = self.strip_export(key).strip()
+            key = self._strip_export(key).strip()
             value = value.strip()
-            value = self.remove_lt_quotes(value)
+            value = self._remove_lt_quotes(value)
 
             loaded_values[key] = value
 
         return loaded_values
 
-    def remove_lt_quotes(self, in_: str) -> str:
+    def _remove_lt_quotes(self, in_: str) -> str:
         """Remove matched leading and trailing single or double quotes."""
         match = self.LTQUOTES_RE.match(in_)
         return match.group(2) if match and match.group(2) else in_
 
-    def strip_export(self, in_: str) -> str:
+    def _strip_export(self, in_: str) -> str:
         """Remove leading 'export ' prefix, case agnostic."""
         return self.EXPORT_PREFIX_RE.sub("", in_)
