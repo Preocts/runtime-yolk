@@ -20,14 +20,22 @@ loosely followed:
       - [X] environment
       - [X] logging level
       - [X] custom
-- [ ] Logger init
-  - [ ] Create a logger or apply logging style to existing (think AWS lambda)
-  - [ ] setters for format, handlers, etc
-  - [ ] defaults loaded from default.ini (optional if exists)
+- [X] Logger init
+  - [X] Create a logger or apply logging style to existing (think AWS lambda)
+  - [X] setters for format, handlers, etc
+  - [X] defaults loaded from default.ini (optional if exists)
 - [ ] Secrets loader (.env)
   - [X] auto load off by default
   - [X] discovery in cwd
   - [ ] cli `add-secret [name] [value]`
+- [ ] Spike: load json/yaml/toml ?
+  - Return custom dict-like object versus ConfigParser
+  - All should translate to a nested-dict structure
+  - Detect by file extension or ask-forgiveness loading?
+  - Alternative `.load_config(type=...)` keeping `.ini` default behavior
+- [ ] Documentation for use
+- [ ] Example files
+- [ ] pypi deployable in CI
 
 
 ## Requirements
