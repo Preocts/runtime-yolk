@@ -1,6 +1,12 @@
 from __future__ import annotations
 
+from pathlib import Path
+
+import pytest
 from runtime_yolk import env_cli
+
+FIXTURE_ENV = "tests/fixtures/env_cli_test/.env"
+EXPECTED_CONTENTS = Path(FIXTURE_ENV).read_text()
 
 
 def test_parse_args() -> None:
@@ -35,3 +41,24 @@ def test_parse_args_delete() -> None:
 
     assert args.delete is True
     assert args_flags.delete is True
+
+
+@pytest.mark.parametrize(
+    ("file_", "expected"),
+    (
+        (FIXTURE_ENV, EXPECTED_CONTENTS),
+        (".missingno", ""),
+    ),
+)
+def test_read_file(file_: str, expected: str) -> None:
+    assert env_cli._read_file(file_) == expected
+
+
+def test_save_file(temp_file: tuple[int, str]) -> None:
+    _, filename = temp_file
+
+    env_cli._save_file(filename, EXPECTED_CONTENTS)
+
+    contents = Path(filename).read_text()
+
+    assert contents == EXPECTED_CONTENTS

@@ -41,6 +41,21 @@ def _parse_args(arg_list: list[str] | None = None) -> Namespace:
     return parser.parse_args(arg_list)
 
 
+def _read_file(file_: str) -> str:
+    """Read in given file if exists, otherwise return empty string."""
+    try:
+        with open(file_) as infile:
+            return infile.read()
+    except FileNotFoundError:
+        return ""
+
+
+def _save_file(file_: str, contents: str) -> None:
+    """Save contents to file as provided."""
+    with open(file_, "w") as outfile:
+        outfile.write(contents)
+
+
 def main() -> int:
     """Entry point for cli."""
     # pragma: no cover
