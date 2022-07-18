@@ -62,3 +62,19 @@ def test_save_file(temp_file: tuple[int, str]) -> None:
     contents = Path(filename).read_text()
 
     assert contents == EXPECTED_CONTENTS
+
+
+def test_add_key() -> None:
+    expected_lines = EXPECTED_CONTENTS.split("\n")
+    expected_lines.append("NEWVALUE=testing")
+    expected = "\n".join(expected_lines)
+
+    results = env_cli._add_key("newvalue", "testing", EXPECTED_CONTENTS)
+
+    assert results == expected
+
+
+def test_contains_key() -> None:
+    assert env_cli._contains_key("TEST1", EXPECTED_CONTENTS)
+    assert env_cli._contains_key("TEST2", EXPECTED_CONTENTS)
+    assert not env_cli._contains_key("TEST3", EXPECTED_CONTENTS)

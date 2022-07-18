@@ -3,6 +3,8 @@ from __future__ import annotations
 from argparse import ArgumentParser
 from argparse import Namespace
 
+from runtime_yolk.env_loader import EnvLoader
+
 
 def _parse_args(arg_list: list[str] | None = None) -> Namespace:
     """Parse sys.argv."""
@@ -54,6 +56,21 @@ def _save_file(file_: str, contents: str) -> None:
     """Save contents to file as provided."""
     with open(file_, "w") as outfile:
         outfile.write(contents)
+
+
+def _contains_key(key: str, contents: str) -> bool:
+    """True if key is contained in contents, otherwise false."""
+    content_dct = EnvLoader().parse_env_file(contents)
+    return key in content_dct
+
+
+def _add_key(key: str, value: str, contents: str) -> str:
+    """Add key=value to contents, returns contents. Raises KeyError if key exists."""
+    if _contains_key(key, contents):
+        raise KeyError("Key already exists in target file.")
+    lines = contents.split("\n")
+    lines.append(f"{key.upper()}={value}")
+    return "\n".join(lines)
 
 
 def main() -> int:
