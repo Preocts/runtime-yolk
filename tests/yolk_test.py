@@ -2,27 +2,14 @@ from __future__ import annotations
 
 import logging
 import os
-import tempfile
 from configparser import NoOptionError
 from pathlib import Path
-from typing import Generator
 
 import pytest
 from _pytest.logging import LogCaptureFixture
 from runtime_yolk import Yolk
 
 FIXTURE_PATH = "tests/fixtures/yolk_test"
-
-
-@pytest.fixture
-def temp_file() -> Generator[tuple[int, str], None, None]:
-    """Yields file_descriptor and path"""
-    try:
-        file_desc, path = tempfile.mkstemp(prefix="temp_", dir="tests")
-        os.close(file_desc)
-        yield file_desc, path
-    finally:
-        os.remove(path)
 
 
 def test_working_directory_attr_unset() -> None:
