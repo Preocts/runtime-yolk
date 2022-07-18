@@ -1,9 +1,8 @@
 from __future__ import annotations
 
+import re
 from argparse import ArgumentParser
 from argparse import Namespace
-
-from runtime_yolk.env_loader import EnvLoader
 
 
 def _parse_args(arg_list: list[str] | None = None) -> Namespace:
@@ -58,28 +57,37 @@ def _save_file(file_: str, contents: str) -> None:
         outfile.write(contents)
 
 
-def _contains_key(key: str, contents: str) -> bool:
-    """True if key is contained in contents, otherwise false."""
-    content_dct = EnvLoader().parse_env_file(contents)
-    return key in content_dct
-
-
 def _add_key(key: str, value: str, contents: str) -> str:
     """Add key=value to contents, returns contents. Raises KeyError if key exists."""
-    if _contains_key(key, contents):
+
+    key_pattern = re.compile(rf"{key.upper()}(\s+)?=")
+    if key_pattern.search(contents):
         raise KeyError("Key already exists in target file.")
     lines = contents.split("\n")
     lines.append(f"{key.upper()}={value}")
     return "\n".join(lines)
 
 
-def main() -> int:
-    """Entry point for cli."""
-    # pragma: no cover
-    args = _parse_args()
-    print(args)
-    return 1
+def _update_key(key: str, value: str, contents: str) -> str:
+    """Updtes key=value, returns contents. Raises KeyError if key is missing."""
+
+    key_pattern = re.compile(rf"{key.upper()}(\s+)?=")
+    sub_pattern = re.compile(rf"{key.upper()}(\s+)?=.+")
+    match = key_pattern.search(contents)
+
+    if not match:
+        raise KeyError("Key to update was not found in file.")
+
+    return sub_pattern.sub(f"{key.upper()}={value}", contents)
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+# def main() -> int:
+#     """Entry point for cli."""
+#     # pragma: no cover
+#     args = _parse_args()
+#     print(args)
+#     return 1
+
+
+# if __name__ == "__main__":
+#     raise SystemExit(main())

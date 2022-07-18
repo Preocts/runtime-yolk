@@ -74,7 +74,20 @@ def test_add_key() -> None:
     assert results == expected
 
 
-def test_contains_key() -> None:
-    assert env_cli._contains_key("TEST1", EXPECTED_CONTENTS)
-    assert env_cli._contains_key("TEST2", EXPECTED_CONTENTS)
-    assert not env_cli._contains_key("TEST3", EXPECTED_CONTENTS)
+def test_add_key_raises_when_exists() -> None:
+    with pytest.raises(KeyError):
+        env_cli._add_key("TEST1", "some value", EXPECTED_CONTENTS)
+
+
+def test_update_key() -> None:
+    expected = EXPECTED_CONTENTS.replace("value_one", "new_value")
+
+    contents = env_cli._update_key("TEST1", "new_value", EXPECTED_CONTENTS)
+    print(expected)
+    print(contents)
+    assert contents == expected
+
+
+def test_update_key_raises_when_not_exists() -> None:
+    with pytest.raises(KeyError):
+        env_cli._update_key("NEWKEY", "some value", EXPECTED_CONTENTS)
