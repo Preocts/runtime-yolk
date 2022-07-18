@@ -52,13 +52,13 @@ class EnvLoader:
     def _load_values(self, filepath: Path) -> dict[str, str]:
         """Internal: Load values from provided filename."""
         try:
-            return self._parse_env_file(filepath.read_text())
+            return self.parse_env_file(filepath.read_text())
 
         except FileNotFoundError:
             return {}
 
-    def _parse_env_file(self, contents: str) -> dict[str, str]:
-        """Internal: Parse env file into key-pair values."""
+    def parse_env_file(self, contents: str) -> dict[str, str]:
+        """Parse env file into key-pair values."""
         loaded_values: dict[str, str] = {}
 
         for line in contents.split("\n"):
