@@ -69,7 +69,7 @@ def _add_key(key: str, value: str, contents: str) -> str:
 
 
 def _update_key(key: str, value: str, contents: str) -> str:
-    """Updtes key=value, returns contents. Raises KeyError if key is missing."""
+    """Updates key=value, returns contents. Raises KeyError if key is missing."""
 
     key_pattern = re.compile(rf"{key.upper()}(\s+)?=")
     sub_pattern = re.compile(rf"{key.upper()}(\s+)?=.+")
