@@ -51,43 +51,63 @@ def _read_file(file_: str) -> str:
         return ""
 
 
-def _save_file(file_: str, contents: str) -> None:
-    """Save contents to file as provided."""
+def _write_file(file_: str, contents: str) -> None:
+    """Write contents to file as provided."""
     with open(file_, "w") as outfile:
         outfile.write(contents)
 
 
 def _add_key(key: str, value: str, contents: str) -> str:
     """Add key=value to contents, returns contents. Raises KeyError if key exists."""
-
-    key_pattern = re.compile(rf"{key.upper()}(\s+)?=")
-    if key_pattern.search(contents):
+    if re.search(rf"{key.upper()}(\s+)?=", contents):
         raise KeyError("Key already exists in target file.")
+
     lines = contents.split("\n")
     lines.append(f"{key.upper()}={value}")
     return "\n".join(lines)
 
 
 def _update_key(key: str, value: str, contents: str) -> str:
-    """Updates key=value, returns contents. Raises KeyError if key is missing."""
-
-    key_pattern = re.compile(rf"{key.upper()}(\s+)?=")
+    """Update key=value, returns contents. Raises KeyError if key is missing."""
     sub_pattern = re.compile(rf"{key.upper()}(\s+)?=.+")
-    match = key_pattern.search(contents)
 
-    if not match:
+    if not sub_pattern.search(contents):
         raise KeyError("Key to update was not found in file.")
 
     return sub_pattern.sub(f"{key.upper()}={value}", contents)
 
 
-# def main() -> int:
-#     """Entry point for cli."""
-#     # pragma: no cover
-#     args = _parse_args()
-#     print(args)
-#     return 1
+def _delete_key(key: str, contents: str) -> str:
+    """Delete key, returns contents. Raises KeyError if key is missing."""
+    sub_pattern = re.compile(rf"{key.upper()}(\s+)?=.+")
+
+    if not sub_pattern.search(contents):
+        raise KeyError("Key to update was not found in file.")
+    lines = [line for line in contents.split("\n") if not sub_pattern.search(line)]
+
+    return "\n".join(lines)
 
 
-# if __name__ == "__main__":
-#     raise SystemExit(main())
+def main(_args: list[str] | None = None) -> int:
+    """Entry point for cli."""
+    args = _parse_args(_args)
+
+    contents = _read_file(args.file)
+    try:
+        if args.delete:
+            contents = _delete_key(args.key, contents)
+        elif args.update:
+            contents = _update_key(args.key, args.value, contents)
+        else:
+            contents = _add_key(args.key, args.value, contents)
+    except KeyError as error:
+        print(f"Error: {error}")
+        return 2
+
+    _write_file(args.file, contents)
+
+    return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
