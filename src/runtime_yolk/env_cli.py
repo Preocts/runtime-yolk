@@ -51,8 +51,8 @@ def _read_file(file_: str) -> str:
         return ""
 
 
-def _save_file(file_: str, contents: str) -> None:
-    """Save contents to file as provided."""
+def _write_file(file_: str, contents: str) -> None:
+    """Write contents to file as provided."""
     with open(file_, "w") as outfile:
         outfile.write(contents)
 
@@ -88,13 +88,26 @@ def _delete_key(key: str, contents: str) -> str:
     return "\n".join(lines)
 
 
-# def main() -> int:
-#     """Entry point for cli."""
-#     # pragma: no cover
-#     args = _parse_args()
-#     print(args)
-#     return 1
+def main(_args: list[str] | None = None) -> int:
+    """Entry point for cli."""
+    args = _parse_args(_args)
+
+    contents = _read_file(args.file)
+    try:
+        if args.delete:
+            contents = _delete_key(args.key, contents)
+        elif args.update:
+            contents = _update_key(args.key, args.value, contents)
+        else:
+            contents = _add_key(args.key, args.value, contents)
+    except KeyError as error:
+        print(f"Error: {error}")
+        return 2
+
+    _write_file(args.file, contents)
+
+    return 1
 
 
-# if __name__ == "__main__":
-#     raise SystemExit(main())
+if __name__ == "__main__":
+    raise SystemExit(main())

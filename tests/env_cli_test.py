@@ -9,6 +9,14 @@ FIXTURE_ENV = "tests/fixtures/env_cli_test/.env"
 EXPECTED_CONTENTS = Path(FIXTURE_ENV).read_text()
 
 
+@pytest.fixture
+def temp_env(temp_file: tuple[int, str]) -> str:
+    """Create temp env populated with fixture contents."""
+    with open(temp_file[1], "w") as tempfile:
+        tempfile.write(EXPECTED_CONTENTS)
+    return temp_file[1]
+
+
 def test_parse_args() -> None:
     cli_args = ["test_key", "test_value", "-F", "tests/fixtures/env_cli_test/.env"]
 
@@ -57,21 +65,31 @@ def test_read_file(file_: str, expected: str) -> None:
 def test_save_file(temp_file: tuple[int, str]) -> None:
     _, filename = temp_file
 
-    env_cli._save_file(filename, EXPECTED_CONTENTS)
+    env_cli._write_file(filename, EXPECTED_CONTENTS)
 
     contents = Path(filename).read_text()
 
     assert contents == EXPECTED_CONTENTS
 
 
-def test_add_key() -> None:
+def test_add_key(temp_env: str) -> None:
     expected_lines = EXPECTED_CONTENTS.split("\n")
     expected_lines.append("NEWVALUE=testing")
-    expected = "\n".join(expected_lines)
 
-    results = env_cli._add_key("newvalue", "testing", EXPECTED_CONTENTS)
+    args = ["newvalue", "testing", "--file", temp_env]
 
-    assert results == expected
+    env_cli.main(args)
+
+    with open(temp_env) as tempfile:
+        results = tempfile.read()
+
+    assert results == "\n".join(expected_lines)
+
+
+def test_main_returns_code_on_error(temp_env: str) -> None:
+    args = ["TEST1", "exists", "-F", temp_env]
+    result = env_cli.main(args)
+    assert result == 2
 
 
 def test_add_key_raises_when_exists() -> None:
@@ -79,13 +97,16 @@ def test_add_key_raises_when_exists() -> None:
         env_cli._add_key("TEST1", "some value", EXPECTED_CONTENTS)
 
 
-def test_update_key() -> None:
+def test_update_key(temp_env: str) -> None:
     expected = EXPECTED_CONTENTS.replace("value_one", "new_value")
+    args = ["-U", "TEST1", "new_value", "--file", temp_env]
 
-    contents = env_cli._update_key("TEST1", "new_value", EXPECTED_CONTENTS)
-    print(expected)
-    print(contents)
-    assert contents == expected
+    env_cli.main(args)
+
+    with open(temp_env) as tempfile:
+        results = tempfile.read()
+
+    assert results == expected
 
 
 def test_update_key_raises_when_not_exists() -> None:
@@ -93,13 +114,17 @@ def test_update_key_raises_when_not_exists() -> None:
         env_cli._update_key("NEWKEY", "some value", EXPECTED_CONTENTS)
 
 
-def test_delete_key() -> None:
+def test_delete_key(temp_env: str) -> None:
     lines = [n for n in EXPECTED_CONTENTS.split("\n") if not n.startswith("export")]
     expected = "\n".join(lines)
+    args = ["TEST1", "--delete", "-F", temp_env]
 
-    result = env_cli._delete_key("TEST1", EXPECTED_CONTENTS)
+    env_cli.main(args)
 
-    assert result == expected
+    with open(temp_env) as tempfile:
+        results = tempfile.read()
+
+    assert results == expected
 
 
 def test_delete_key_raises_when_not_exists() -> None:
