@@ -46,8 +46,8 @@ homepage = "https://github.com/Preocts/runtime-yolk"
 # repository = ""
 # changelog = ""
 
-# [project.scripts]
-# python-src-example = "module_name.sample:main"
+[project.scripts]
+yolk-env = "runtime_yolk.env_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]  # ["."] by default
