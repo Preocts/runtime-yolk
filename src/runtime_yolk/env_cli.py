@@ -59,10 +59,9 @@ def _save_file(file_: str, contents: str) -> None:
 
 def _add_key(key: str, value: str, contents: str) -> str:
     """Add key=value to contents, returns contents. Raises KeyError if key exists."""
-
-    key_pattern = re.compile(rf"{key.upper()}(\s+)?=")
-    if key_pattern.search(contents):
+    if re.search(rf"{key.upper()}(\s+)?=", contents):
         raise KeyError("Key already exists in target file.")
+
     lines = contents.split("\n")
     lines.append(f"{key.upper()}={value}")
     return "\n".join(lines)
@@ -70,12 +69,9 @@ def _add_key(key: str, value: str, contents: str) -> str:
 
 def _update_key(key: str, value: str, contents: str) -> str:
     """Updates key=value, returns contents. Raises KeyError if key is missing."""
-
-    key_pattern = re.compile(rf"{key.upper()}(\s+)?=")
     sub_pattern = re.compile(rf"{key.upper()}(\s+)?=.+")
-    match = key_pattern.search(contents)
 
-    if not match:
+    if not sub_pattern.search(contents):
         raise KeyError("Key to update was not found in file.")
 
     return sub_pattern.sub(f"{key.upper()}={value}", contents)
