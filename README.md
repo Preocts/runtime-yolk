@@ -24,10 +24,10 @@ loosely followed:
   - [X] Create a logger or apply logging style to existing (think AWS lambda)
   - [X] setters for format, handlers, etc
   - [X] defaults loaded from default.ini (optional if exists)
-- [ ] Secrets loader (.env)
+- [X] Secrets loader (.env)
   - [X] auto load off by default
   - [X] discovery in cwd
-  - [ ] cli `add-secret [name] [value]`
+  - [X] cli `yolk-env [-h] [-U] [-D] [-F FILE] key [value]`
 - [ ] Spike: load json/yaml/toml ?
   - Return custom dict-like object versus ConfigParser
   - All should translate to a nested-dict structure
