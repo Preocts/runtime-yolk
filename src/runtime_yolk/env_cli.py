@@ -68,13 +68,24 @@ def _add_key(key: str, value: str, contents: str) -> str:
 
 
 def _update_key(key: str, value: str, contents: str) -> str:
-    """Updates key=value, returns contents. Raises KeyError if key is missing."""
+    """Update key=value, returns contents. Raises KeyError if key is missing."""
     sub_pattern = re.compile(rf"{key.upper()}(\s+)?=.+")
 
     if not sub_pattern.search(contents):
         raise KeyError("Key to update was not found in file.")
 
     return sub_pattern.sub(f"{key.upper()}={value}", contents)
+
+
+def _delete_key(key: str, contents: str) -> str:
+    """Delete key, returns contents. Raises KeyError if key is missing."""
+    sub_pattern = re.compile(rf"{key.upper()}(\s+)?=.+")
+
+    if not sub_pattern.search(contents):
+        raise KeyError("Key to update was not found in file.")
+    lines = [line for line in contents.split("\n") if not sub_pattern.search(line)]
+
+    return "\n".join(lines)
 
 
 # def main() -> int:

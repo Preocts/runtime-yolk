@@ -91,3 +91,17 @@ def test_update_key() -> None:
 def test_update_key_raises_when_not_exists() -> None:
     with pytest.raises(KeyError):
         env_cli._update_key("NEWKEY", "some value", EXPECTED_CONTENTS)
+
+
+def test_delete_key() -> None:
+    lines = [n for n in EXPECTED_CONTENTS.split("\n") if not n.startswith("export")]
+    expected = "\n".join(lines)
+
+    result = env_cli._delete_key("TEST1", EXPECTED_CONTENTS)
+
+    assert result == expected
+
+
+def test_delete_key_raises_when_not_exists() -> None:
+    with pytest.raises(KeyError):
+        env_cli._delete_key("NEWKEY", EXPECTED_CONTENTS)
