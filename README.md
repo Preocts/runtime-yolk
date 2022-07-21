@@ -1,4 +1,4 @@
-# runtime-yolk (WIP)
+# runtime-yolk
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
@@ -6,11 +6,35 @@
 [![Python package](https://github.com/Preocts/runtime-yolk/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/Preocts/runtime-yolk/actions/workflows/python-tests.yml)
 [![codecov](https://codecov.io/gh/Preocts/runtime-yolk/branch/main/graph/badge.svg?token=sn79oOaqRI)](https://codecov.io/gh/Preocts/runtime-yolk)
 
-This project aims to create a single library for run-time initiation tasks that
-are often duplicated across many projects. A work in progress, the road-map is
-loosely followed:
+## Requirements
+
+- [Python](https://python.org) >= 3.8
+
+
+Load your local `.env` file to environ, load your application.ini which can be
+environment specific, and setup basic logging behavior all with a single call.
+Designed to be low effort, runtime-yolk works well in the initial entry point of
+a project and doesn't add additional requires to downstream libraries.
+
+- Environment variables are loaded from the `.env` file, or specified source,
+  directly to `os.environ`. This allows other processes to pull directly from
+  the environ and reduces library coupling.
+
+- Configuration files are loaded as ConfigParser objects (stdlib). The loading
+  layers each consecutive file allowing flexible environment specific configs to
+  be leveraged.  A custom `{{key}}` string interpolation is used when loading
+  config files to allow environ vars to be injected into the config. If the
+  requested key cannot be interpolated the literal value is kept instead of
+  raising exceptions. `%` is also safe for all api-token/key needs.
+
+- Set logging levels and format initially from the configuration. Helper methods
+  for creating a logger for the entry script, define logging level, or add
+  `FileHandlers` make setup easier.
+
+
 
 ## Road Map
+As a work in progress, the road-map is loosely followed:
 
 - [X] Hot load parameter (run all loaders)
 - [X] Configuration loading
@@ -36,12 +60,6 @@ loosely followed:
 - [ ] Documentation for use
 - [ ] Example files
 - [ ] pypi deployable in CI
-
-
-## Requirements
-
-- [Python](https://python.org) >= 3.8
-
 
 ---
 
@@ -73,8 +91,8 @@ the desired version while creating the `venv`. (e.g. `python3` or `python3.8`)
 Clone this repo and enter root directory of repo:
 
 ```console
-$ git clone https://github.com/{{ORG_NAME}}/{{REPO_NAME}}
-$ cd {{REPO_NAME}}
+$ git clone https://github.com/Preocts/runtime-yolk
+$ cd runtime-yolk
 ```
 
 Create the `venv`:
