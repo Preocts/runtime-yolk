@@ -89,7 +89,7 @@ def test_add_key(temp_env: str) -> None:
 def test_main_returns_code_on_error(temp_env: str) -> None:
     args = ["TEST1", "exists", "-F", temp_env]
     result = env_cli.main(args)
-    assert result == 2
+    assert result
 
 
 def test_add_key_raises_when_exists() -> None:

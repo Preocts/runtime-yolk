@@ -102,11 +102,11 @@ def main(_args: list[str] | None = None) -> int:
             contents = _add_key(args.key, args.value, contents)
     except KeyError as error:
         print(f"Error: {error}")
-        return 2
+        return 1
 
     _write_file(args.file, contents)
 
-    return 1
+    return 0
 
 
 if __name__ == "__main__":
