@@ -19,14 +19,14 @@ class Yolk:
     def __init__(
         self,
         *,
-        auto_load: bool = True,
+        auto_load: bool = False,
         working_directory: str | None = None,
     ) -> None:
         """
         Create Yolk run-time loader instance.
 
         Keyword Args:
-            auto_load: Run loads on instantiation. (default: True)
+            auto_load: Run loads on instantiation. (default: False)
             working_directory: Defaults to cwd, provide path to where config files
         """
         if working_directory:

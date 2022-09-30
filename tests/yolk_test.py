@@ -33,13 +33,13 @@ def test_config_property_default() -> None:
 
 
 def test_config_load_default_ini() -> None:
-    yolk = Yolk(working_directory=FIXTURE_PATH)
+    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=True)
 
     assert yolk.config.get("DEFAULT", "yolk_test") == "pass"
 
 
 def test_config_load_with_auto_load_false() -> None:
-    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=False)
+    yolk = Yolk(working_directory=FIXTURE_PATH)
 
     with pytest.raises(NoOptionError):
         assert yolk.config.get("DEFAULT", "yolk_test") == "pass"
@@ -54,7 +54,7 @@ def test_config_load_specific_ini() -> None:
 
 
 def test_config_layers_correctly() -> None:
-    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=False)
+    yolk = Yolk(working_directory=FIXTURE_PATH)
 
     yolk.load_config()
     yolk.load_config("not-application")
@@ -63,13 +63,13 @@ def test_config_layers_correctly() -> None:
 
 
 def test_env_load() -> None:
-    Yolk(working_directory=FIXTURE_PATH)
+    Yolk(working_directory=FIXTURE_PATH, auto_load=True)
 
     assert os.environ["ENVIRONMENT"] == "test"
 
 
 def test_env_load_specific_file() -> None:
-    yolk = Yolk(working_directory=FIXTURE_PATH, auto_load=False)
+    yolk = Yolk(working_directory=FIXTURE_PATH)
 
     yolk.load_env(".env-prod")
 
