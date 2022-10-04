@@ -7,8 +7,7 @@
 
 ## Requirements
 
-- [Python](https://python.org) >= 3.8
-
+- [Python](https://python.org) >= 3.7
 
 Load your local `.env` file to environ, load your application.ini which can be
 environment specific, and setup basic logging behavior all with a single call.
@@ -19,7 +18,7 @@ a project and doesn't add additional requires to downstream libraries.
   directly to `os.environ`. This allows other processes to pull directly from
   the environ and reduces library coupling.
 
-- Configuration files are loaded as ConfigParser objects (stdlib). The loading
+- Configuration files are loaded as `ConfigParser` objects. The loading
   layers each consecutive file allowing flexible environment specific configs to
   be leveraged.  A custom `{{key}}` string interpolation is used when loading
   config files to allow environ vars to be injected into the config. If the
@@ -30,35 +29,73 @@ a project and doesn't add additional requires to downstream libraries.
   for creating a logger for the entry script, define logging level, or add
   `FileHandlers` make setup easier.
 
+---
 
+## Installation
 
-## Road Map
-As a work in progress, the road-map is loosely followed:
+From github:
 
-- [X] Hot load parameter (run all loaders)
-- [X] Configuration loading
-  - [X] load a application.ini in project root, assume some defaults if missing
-    - [X] project default environment
-    - [X] project default environ var names
-      - [X] environment
-      - [X] logging level
-      - [X] custom
-- [X] Logger init
-  - [X] Create a logger or apply logging style to existing (think AWS lambda)
-  - [X] setters for format, handlers, etc
-  - [X] defaults loaded from default.ini (optional if exists)
-- [X] Secrets loader (.env)
-  - [X] auto load off by default
-  - [X] discovery in cwd
-  - [X] cli `yolk-env [-h] [-U] [-D] [-F FILE] key [value]`
-- [ ] Spike: load json/yaml/toml ?
-  - Return custom dict-like object versus ConfigParser
-  - All should translate to a nested-dict structure
-  - Detect by file extension or ask-forgiveness loading?
-  - Alternative `.load_config(type=...)` keeping `.ini` default behavior
-- [ ] Documentation for use
-- [ ] Example files
-- [ ] pypi deployable in CI
+```shell
+$ python -m pip install git+https://github.com/Preocts/runtime-yolk@#.#.#
+```
+
+Replace the `#.#.#` with the desired version or `@main` for the latest (unstable).
+
+From pypi:
+
+```shell
+$ python -m pip install runtime-yolk
+```
+
+---
+
+## Usage Examples
+
+#### [Loading runtime setup manually](examples/manual_loading.py)
+
+#### [Loading runtime setup automatically](examples/auto_loading.py)
+
+### Setup of `application.ini`
+
+The default configuration file looked for loading is `application.ini`. This can be change on call of `.load_config()` if desired. There are no required fields in the configuration file. However, a few will impact `runtime-yolk`'s behavior directly when present in the `[DEFAULT]` section:
+
+- `logging_level` : When set, `.set_logging()` will use this logging level
+- `logging_format` : Allow overriding the default logging format template used.
+  - Default is `%(asctime)s - %(levelname)s - %(name)s - %(message)s`
+- `environment` : When defined the value will be used to load additional `application-[environment].ini` configuration files. These can be chained however will break the loading loop on a file that has already been loaded.
+
+Sample:
+
+```ini
+[DEFAULT]
+logging_level = DEBUG
+logging_format = %(asctime)s - %(levelname)s - %(name)s - %(message)s
+environment = {{ENVIRONMENT}}
+```
+
+### `.env` file loading
+
+`.env` files are loaded with the expectation of key = value pairs. `#` comments are allowed as well as blank lines.
+
+Current format for the `.env` file supports strings only and is parsed in
+the following order:
+
+1. Each separate line is considered a new possible key/value set
+2. Each set is delimited by the first `=` found
+3. Leading and trailing whitespace are removed
+4. Removes leading 'export ' prefix, case agnostic
+5. Matched leading/trailing single quotes or double quotes will be
+  stripped from values (not keys).
+
+Sample:
+
+```ini
+# OAuth token goes here, do not commit this Glenn
+SAMPLE_TOKEN=somesecrettokenforuse
+ENVIRONMENT=sandbox
+```
+
+---
 
 ---
 
