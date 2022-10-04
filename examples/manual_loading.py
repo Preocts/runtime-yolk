@@ -26,4 +26,4 @@ def mock_oauth_login(token: str) -> None:
 
 
 # Log in with the token from our .env which has been translated into the config
-mock_oauth_login(runtime.config.get("SAMPLE_TOKEN"))
+mock_oauth_login(runtime.config.get("DEFAULT", "SAMPLE_TOKEN"))
