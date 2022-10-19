@@ -48,14 +48,14 @@ def test_load_default_and_env_config(config_prod: ConfigLoader) -> None:
     (
         ("{{ENVIRONMENT}}", "production"),
         ("{{SECOND_VALUE}}", "eggs are cool"),
-        ("{{NOT FOUND}}", "{{NOT FOUND}}"),
+        ("{{NOT FOUND}}", ""),
         (
             "This{{ENVIRONMENT}}should replace because {{SECOND_VALUE}}",
             "Thisproductionshould replace because eggs are cool",
         ),
         (
             "This {{ENVIRONMENT}} should {{hi}} replace because --{{SECOND_VALUE}}--",
-            "This production should {{hi}} replace because --eggs are cool--",
+            "This production should  replace because --eggs are cool--",
         ),
     ),
 )

@@ -79,8 +79,7 @@ class ConfigLoader:
     def _interpolate_environment(self, contents: str) -> str:
         """Interpolate {{keywords}} to matching environment variable values."""
         for match in re.finditer(INTERPOLATE_PATTERN, contents):
-            if match.group(1) in os.environ:
-                contents = re.sub(match.group(0), os.environ[match.group(1)], contents)
+            contents = re.sub(match.group(0), os.getenv(match.group(1), ""), contents)
         return contents
 
     def get_config(self) -> ConfigParser:
