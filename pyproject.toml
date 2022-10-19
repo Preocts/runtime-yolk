@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "runtime-yolk"
-version = "1.0.0"
+version = "1.1.0"
 requires-python = ">=3.7"
 description = "This project aims to create a single library for run-time initiation tasks that are often duplicated across many projects."
 readme = "README.md"
