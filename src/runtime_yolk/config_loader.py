@@ -33,7 +33,7 @@ class ConfigLoader:
         """Build and populate the default config."""
         self._config["DEFAULT"] = {
             "environment": "",
-            "logging_level": "DEBUG",
+            "logging_level": "ERROR",
             "logging_format": "%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         }
 
