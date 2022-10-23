@@ -30,7 +30,7 @@ def test_load_with_no_default_config(
 
     loaded_config = config_instance.get_config()
 
-    assert loaded_config.get("DEFAULT", "logging_level") == "DEBUG"
+    assert loaded_config.get("DEFAULT", "logging_level") == "ERROR"
     assert loaded_config.get("DEFAULT", "environment") == ""
 
 
