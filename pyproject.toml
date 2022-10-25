@@ -44,7 +44,7 @@ homepage = "https://github.com/Preocts/runtime-yolk"
 # changelog = ""
 
 [tool.setuptools.package-data]
-"module_name" = ["py.typed"]
+"runtime_yolk" = ["py.typed"]
 
 [project.scripts]
 yolk-env = "runtime_yolk.env_cli:main"
