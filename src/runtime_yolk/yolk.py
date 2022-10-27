@@ -70,9 +70,9 @@ class Yolk:
         Set the root log level for stderr output. If empty, config level is used.
 
         Args:
-            level: String or Int representing logging level. (e.g.: "DEBUG" or 10)
+            level: String or Int representing logging level. (e.g.: "ERROR" or 40)
         """
-        config_level = self.config.get("DEFAULT", "logging_level", fallback="DEBUG")
+        config_level = self.config.get("DEFAULT", "logging_level", fallback="ERROR")
         config_fmt = self.config.get("DEFAULT", "logging_format", fallback="")
 
         # Create our handler for root logger, don't touch existing handlers
