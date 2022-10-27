@@ -4,12 +4,20 @@ import logging
 import os
 from configparser import NoOptionError
 from pathlib import Path
+from typing import Generator
+from unittest.mock import patch
 
 import pytest
 from _pytest.logging import LogCaptureFixture
 from runtime_yolk import Yolk
 
 FIXTURE_PATH = "tests/fixtures/yolk_test"
+
+
+@pytest.fixture(autouse=True)
+def patch_environ() -> Generator[None, None, None]:
+    with patch.dict(os.environ, {}):
+        yield None
 
 
 def test_working_directory_attr_unset() -> None:
