@@ -32,8 +32,8 @@ class ConfigLoader:
     def _build_default_config(self) -> None:
         """Build and populate the default config."""
         self._config["DEFAULT"] = {
-            "environment": "",
-            "logging_level": "ERROR",
+            "environment": os.getenv("ENVIRONMENT", ""),
+            "logging_level": os.getenv("LOGGING_LEVEL", "ERROR"),
             "logging_format": "%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         }
 
