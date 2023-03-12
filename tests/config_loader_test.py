@@ -28,19 +28,15 @@ def test_load_with_no_default_config(
     config_instance = ConfigLoader()
     config_instance.load()
 
-    loaded_config = config_instance.get_config()
-
-    assert loaded_config.get("DEFAULT", "logging_level") == "ERROR"
-    assert loaded_config.get("DEFAULT", "environment") == ""
+    assert config_instance.config.get("DEFAULT", "logging_level") == "ERROR"
+    assert config_instance.config.get("DEFAULT", "environment") == ""
 
 
 def test_load_default_and_env_config(config_prod: ConfigLoader) -> None:
     config_prod.load()
 
-    loaded_config = config_prod.get_config()
-
-    assert loaded_config.get("DEFAULT", "logging_level") == "ERROR"
-    assert loaded_config.get("DEFAULT", "environment") == "prod"
+    assert config_prod.config.get("DEFAULT", "logging_level") == "ERROR"
+    assert config_prod.config.get("DEFAULT", "environment") == "prod"
 
 
 @pytest.mark.parametrize(

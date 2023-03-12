@@ -45,7 +45,7 @@ class Yolk:
     @property
     def config(self) -> ConfigParser:
         """Return loaded ConfigParser object."""
-        return self._config.get_config()
+        return self._config.config
 
     def load_config(self, config_name: str = "application") -> None:
         """
