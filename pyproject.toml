@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "runtime-yolk"
 version = "1.2.2"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 description = "This project aims to create a single library for run-time initiation tasks that are often duplicated across many projects."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -99,7 +99,7 @@ max-line-length = 88
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py37,py38,py39,py310,py311,coverage,pre-commit
+envlist = py38,py39,py310,py311,mypy,coverage
 skip_missing_interpreters = true
 isolated_build = True
 
@@ -109,17 +109,13 @@ commands =
     coverage run -p -m pytest tests/
 
 [testenv:coverage]
-depends = py37,py38,py39,py310,py311
-parallel_show_output = true
+depends = py38,py39,py310,py311
 commands =
     python -m coverage combine
     python -m coverage report -m --fail-under=50
     python -m coverage json
 
-[testenv:pre-commit]
-depends = coverage
-parallel_show_output = true
-skip_install = true
-deps = pre-commit
-commands = pre-commit run --all-files --show-diff-on-failure
+[testenv:mypy]
+deps = mypy
+commands = mypy -p runtime_yolk --no-incremental
 """
