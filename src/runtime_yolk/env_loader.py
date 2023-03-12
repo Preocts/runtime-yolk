@@ -20,9 +20,6 @@ from pathlib import Path
 class EnvLoader:
     """Load local .env file into environment variables."""
 
-    LTQUOTES_RE = re.compile(r"([\"'])(.*)\1$|^(.*)$")
-    EXPORT_PREFIX_RE = re.compile(r"^\s*?export\s*", flags=re.IGNORECASE)
-
     def __init__(self, working_directory: Path | None = None) -> None:
         """
         Create .env loader.
@@ -76,9 +73,9 @@ class EnvLoader:
 
     def _remove_lt_quotes(self, in_: str) -> str:
         """Remove matched leading and trailing single or double quotes."""
-        match = self.LTQUOTES_RE.match(in_)
+        match = re.match(r"([\"'])(.*)\1$|^(.*)$", in_)
         return match.group(2) if match and match.group(2) else in_
 
     def _strip_export(self, in_: str) -> str:
         """Remove leading 'export ' prefix, case agnostic."""
-        return self.EXPORT_PREFIX_RE.sub("", in_)
+        return re.sub(r"^\s*?export\s*", "", in_, flags=re.IGNORECASE)
