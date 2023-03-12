@@ -1,4 +1,4 @@
-[![Python 3.7 | 3.8 | 3.9 | 3.10 | 3.11](https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)](https://www.python.org/downloads)
+[![Python 3.8 | 3.9 | 3.10 | 3.11](https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)](https://www.python.org/downloads)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
@@ -9,7 +9,7 @@
 
 ## Requirements
 
-- [Python](https://python.org) >= 3.7
+- [Python](https://python.org) >= 3.8
 
 Load your local `.env` file to environ, load your application.ini which can be
 environment specific, and setup basic logging behavior all with a single call.
@@ -231,12 +231,10 @@ This repo has a Makefile with some quality of life scripts if the system
 supports `make`.  Please note there are no checks for an active `venv` in the
 Makefile.
 
-| PHONY         | Description                                                                |
-| ------------- | -------------------------------------------------------------------------- |
-| `init`        | Update pip to newest version                                               |
-| `install`     | install the project                                                        |
-| `install-dev` | install development/test requirements and project as editable install      |
-| `upgrade-dev` | update all dependencies, regenerate requirements.txt (disabled by default) |
-| `coverage`    | Runs `tox -p`. results to stdout, json, and html                           |
-| `build-dist`  | Build source distribution and wheel distribution                           |
-| `clean`       | Deletes build, tox, coverage, pytest, mypy, cache, and pyc artifacts       |
+| PHONY         | Description                                                           |
+| ------------- | --------------------------------------------------------------------- |
+| `install-dev` | install development/test requirements and project as editable install |
+| `coverage`    | Run coverage and output console report                                |
+| `docker-test` | Run coverage and tests in a docker container.                         |
+| `build-dist`  | Build source distribution and wheel distribution                      |
+| `clean`       | Deletes build, tox, coverage, pytest, mypy, cache, and pyc artifacts  |

@@ -1,11 +1,3 @@
-.PHONY: init
-init:
-	python -m pip install --upgrade pip
-
-.PHONY: install
-install:
-	python -m pip install --upgrade .
-
 .PHONY: install-dev
 install-dev:
 	python -m pip install --editable .[dev,test]
@@ -13,7 +5,13 @@ install-dev:
 
 .PHONY: coverage
 coverage:
-	tox -p
+	coverage run -m pytest tests/
+	coverage report -m
+
+.PHONY: docker-test
+docker-test:
+	docker build -t py-tester .
+	docker run -it --rm py-tester
 
 .PHONY: build-dist
 build-dist:
