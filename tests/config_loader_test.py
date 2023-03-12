@@ -18,7 +18,7 @@ def config_instance() -> ConfigLoader:
 
 @pytest.fixture
 def config_prod() -> Generator[ConfigLoader, None, None]:
-    with patch.dict(os.environ, {"ENVIRONMENT": "prod"}):
+    with patch.dict(os.environ, {"YOLK_ENVIRONMENT": "prod"}):
         yield ConfigLoader(working_directory=FIXTURE_PATH)
 
 
