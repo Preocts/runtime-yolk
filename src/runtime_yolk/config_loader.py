@@ -22,7 +22,7 @@ class ConfigLoader:
             working_directory: Set the working directory where file(s) will be loaded.
         """
         self._working_directory = working_directory or Path().cwd()
-        self._config = ConfigParser(interpolation=None)
+        self.config = ConfigParser(interpolation=None)
 
         self._build_default_config()
 
@@ -31,8 +31,8 @@ class ConfigLoader:
 
     def _build_default_config(self) -> None:
         """Build and populate the default config."""
-        self._config["DEFAULT"] = {
-            "environment": os.getenv("ENVIRONMENT", ""),
+        self.config["DEFAULT"] = {
+            "environment": os.getenv("YOLK_ENVIRONMENT", ""),
             "logging_level": os.getenv("LOGGING_LEVEL", "ERROR"),
             "logging_format": "%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         }
@@ -69,19 +69,15 @@ class ConfigLoader:
 
             # Load the discovered content as a configuration string
             # ConfigParser handles invalid content
-            self._config.read_string(contents)
+            self.config.read_string(contents)
             self._loaded_configs.add(_file)
 
             # If the config file has an environment set, attempt to load the next file.
-            if self._config.get("DEFAULT", "environment", fallback=None):
-                self._load(config_file, self._config.get("DEFAULT", "environment"))
+            if self.config.get("DEFAULT", "environment", fallback=None):
+                self._load(config_file, self.config.get("DEFAULT", "environment"))
 
     def _interpolate_environment(self, contents: str) -> str:
         """Interpolate {{keywords}} to matching environment variable values."""
         for match in re.finditer(INTERPOLATE_PATTERN, contents):
             contents = re.sub(match.group(0), os.getenv(match.group(1), ""), contents)
         return contents
-
-    def get_config(self) -> ConfigParser:
-        """Get the config object."""
-        return self._config

@@ -72,7 +72,7 @@ Sample:
 [DEFAULT]
 logging_level = DEBUG
 logging_format = %(asctime)s - %(levelname)s - %(name)s - %(message)s
-environment = {{ENVIRONMENT}}
+environment = {{YOLK_ENVIRONMENT}}
 ```
 
 ### `.env` file loading
