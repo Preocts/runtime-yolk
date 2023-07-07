@@ -6,6 +6,7 @@ from typing import Generator
 from unittest.mock import patch
 
 import pytest
+
 from runtime_yolk import ConfigLoader
 
 FIXTURE_PATH = Path("tests/fixtures/default_and_env_config")

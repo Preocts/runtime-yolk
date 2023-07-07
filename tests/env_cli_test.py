@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+
 from runtime_yolk import env_cli
 
 FIXTURE_ENV = "tests/fixtures/env_cli_test/.env"

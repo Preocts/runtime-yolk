@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 import pytest
 from _pytest.logging import LogCaptureFixture
+
 from runtime_yolk import Yolk
 
 FIXTURE_PATH = "tests/fixtures/yolk_test"
