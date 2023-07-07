@@ -28,7 +28,7 @@ def test_load_with_no_default_config(
     config_instance = ConfigLoader()
     config_instance.load()
 
-    assert config_instance.config.get("DEFAULT", "logging_level") == "ERROR"
+    assert config_instance.config.get("DEFAULT", "logging_level") == "WARNING"
     assert config_instance.config.get("DEFAULT", "environment") == ""
 
 

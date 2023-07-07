@@ -33,7 +33,7 @@ class ConfigLoader:
         """Build and populate the default config."""
         self.config["DEFAULT"] = {
             "environment": os.getenv("YOLK_ENVIRONMENT", ""),
-            "logging_level": os.getenv("LOGGING_LEVEL", "ERROR"),
+            "logging_level": os.getenv("LOGGING_LEVEL", "WARNING"),
             "logging_format": "%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         }
 
