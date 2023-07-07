@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "runtime-yolk"
-version = "1.2.2"
+version = "1.2.3"
 requires-python = ">=3.8"
 description = "This project aims to create a single library for run-time initiation tasks that are often duplicated across many projects."
 readme = "README.md"
@@ -91,17 +91,11 @@ exclude_lines =[
     "\\.\\.\\.",
 ]
 
-# This is ignored by flake8, here in case they decide to add it in the future
-[tool.flake8]
-ignore = "W503,E203"
-max-line-length = 88
-
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py38,py39,py310,py311,mypy,coverage
+envlist = py38,py39,py310,py311,py312,mypy,coverage
 skip_missing_interpreters = true
-isolated_build = True
 
 [testenv]
 deps = .[test]
@@ -109,7 +103,6 @@ commands =
     coverage run -p -m pytest tests/
 
 [testenv:coverage]
-depends = py38,py39,py310,py311
 commands =
     python -m coverage combine
     python -m coverage report -m --fail-under=50
