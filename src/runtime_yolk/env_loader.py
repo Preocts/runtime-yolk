@@ -10,6 +10,7 @@ the following order:
 - Matched leading/trailing single quotes or double quotes will be
   stripped from values (not keys).
 """
+
 from __future__ import annotations
 
 import os
