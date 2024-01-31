@@ -1,4 +1,5 @@
 """Unit tests for .env file loader"""
+
 from __future__ import annotations
 
 import os
@@ -10,7 +11,6 @@ from unittest.mock import patch
 import pytest
 
 from runtime_yolk import env_loader
-
 
 ENV_FILE_CONTENTS = [
     "SECRETBOX_TEST_PROJECT_ENVIRONMENT=sandbox",
