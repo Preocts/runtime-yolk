@@ -5,6 +5,8 @@
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Preocts/runtime-yolk/main.svg)](https://results.pre-commit.ci/latest/github/Preocts/runtime-yolk/main)
 [![Python tests](https://github.com/Preocts/runtime-yolk/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/Preocts/runtime-yolk/actions/workflows/python-tests.yml)
 
+# *Archived*
+
 # runtime-yolk
 
 ## Requirements
